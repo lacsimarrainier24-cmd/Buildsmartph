@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BuildSmart PH — Innovative Civil Engineering E-Commerce</title>
+  <style>
+    :root{--accent:#0b6fb2;--accent-2:#145c9e;--muted:#666;--card:#fff;--bg:#f4f7fb;}
+    body{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; background:var(--bg); color:#111;}
+    header{background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#fff; padding:28px 16px; text-align:center}
+    .container{max-width:1000px; margin:24px auto; padding:0 16px;}
+    h1{margin:0;font-size:20px;letter-spacing:0.3px}
+    .tag{opacity:0.95; font-weight:600; margin-top:6px; font-size:13px}
+    .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-top:18px}
+    .card{background:var(--card); border-radius:10px; box-shadow:0 6px 18px rgba(20,40,80,0.06); padding:16px; display:flex; flex-direction:column;}
+    .product-image{height:140px; border-radius:6px; background:linear-gradient(135deg,#e9f4fb,#fff); display:flex; align-items:center; justify-content:center; color:var(--accent-2); font-weight:700;}
+    .price{color:var(--accent-2); font-weight:700; margin-top:8px}
+    .btn{background:var(--accent); color:#fff; border:none; padding:10px 12px; border-radius:8px; cursor:pointer; font-weight:600}
+    .btn.secondary{background:#e7f2fb; color:var(--accent-2)}
+    footer{padding:20px; text-align:center; color:var(--muted); font-size:14px; margin-top:28px}
+    .hero{display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap}
+    .hero-text{max-width:640px}
+    .features{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .feature-pill{background:#fff; padding:8px 12px; border-radius:999px; box-shadow:0 4px 12px rgba(15,40,80,0.04); color:var(--muted); font-weight:600}
+    /* Chatbot */
+    .chat-toggle{position:fixed; right:18px; bottom:18px; z-index:1200}
+    .chat-btn{background:var(--accent); color:#fff; border-radius:50%; width:62px; height:62px; border:none; box-shadow:0 10px 30px rgba(11,111,178,0.24); font-size:22px; cursor:pointer}
+    .chat-window{position:fixed; right:18px; bottom:96px; width:340px; max-height:72vh; background:#fff; border-radius:12px; box-shadow:0 18px 40px rgba(10,30,70,0.18); overflow:hidden; display:flex; flex-direction:column; z-index:1200}
+    .chat-header{background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#fff; padding:12px 14px; font-weight:700; display:flex; align-items:center; gap:8px}
+    .chat-body{padding:12px; overflow:auto; flex:1; background:#f7fbff;}
+    .msg{padding:8px 10px; border-radius:10px; margin-bottom:8px; max-width:78%}
+    .msg.bot{background:#fff; color:#111; align-self:flex-start; box-shadow:0 6px 18px rgba(20,40,80,0.04)}
+    .msg.user{background:var(--accent); color:#fff; align-self:flex-end}
+    .chat-input{display:flex; gap:8px; padding:8px; border-top:1px solid #eee}
+    .chat-input input{flex:1; padding:10px 12px; border-radius:8px; border:1px solid #e6eef7}
+    .quick{display:flex; gap:8px; margin-top:8px; flex-wrap:wrap}
+    .chip{background:#eef7ff; padding:6px 9px; border-radius:999px; color:var(--accent-2); cursor:pointer; font-weight:600; border:1px solid #e1f0fb}
+    /* product detail modal */
+    .modal{position:fixed; left:0; right:0; top:0; bottom:0; display:none; align-items:center; justify-content:center; z-index:1300}
+    .modal.open{display:flex}
+    .modal-card{width:92%; max-width:720px; background:#fff; border-radius:12px; padding:18px; box-shadow:0 30px 80px rgba(10,30,70,0.2)}
+    .row{display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap}
+    .specs{margin-top:12px; color:var(--muted)}
+    .small{font-size:13px; color:var(--muted)}
+    @media (max-width:520px){ .hero{flex-direction:column; align-items:flex-start} .chat-window{right:8px; left:8px; width:auto} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="hero">
+        <div class="hero-text">
+          <h1>BuildSmart PH — Innovative Civil Engineering E-Commerce Platform</h1>
+          <div class="tag">Innovative Civil Engineering E-Commerce Platform</div>
+          <div class="features" aria-hidden="true">
+            <div class="feature-pill">Tools & Testers</div>
+            <div class="feature-pill">Eco Materials</div>
+            <div class="feature-pill">Educational Kits</div>
+            <div class="feature-pill">Fast Nationwide Shipping</div>
+          </div>
+        </div>
+        <div style="min-width:220px; text-align:right">
+          <div style="background:#fff;padding:12px;border-radius:8px; display:inline-block; box-shadow:0 8px 20px rgba(10,30,70,0.08)">
+            <div style="font-weight:700; color:var(--accent-2)">Launch Offer</div>
+            <div class="small">Free shipping on first 50 orders</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section style="margin-top:22px">
+      <h2 style="margin:0 0 6px 0">Featured Products</h2>
+      <div class="grid" id="productGrid">
+        <!-- Products injected by JS -->
+      </div>
+    </section>
+
+    <section style="margin-top:28px">
+      <h2 style="margin:0 0 6px 0">About BuildSmart PH</h2>
+      <p style="color:var(--muted)">BuildSmart PH provides innovative civil engineering tools and sustainable materials with a focus on accessibility and education. Designed for students, contractors, and professionals.</p>
+    </section>
+  </main>
+
+  <footer>
+    © BuildSmart PH — Innovative Civil Engineering E-Commerce • Rainier Ramiscal • University of Luzon • TECH-1
+  </footer>
+
+  <!-- Chatbot toggle -->
+  <div class="chat-toggle">
+    <button class="chat-btn" id="openChat" title="Customer support">💬</button>
+  </div>
+
+  <!-- Chat window -->
+  <div class="chat-window" id="chatWindow" style="display:none">
+    <div class="chat-header">BuildSmart Support • Auto-Assistant</div>
+    <div class="chat-body" id="chatBody">
+      <div class="msg bot">Hello! I’m BuildSmart Assistant — ask me about any product or type <strong>menu</strong> to see options.</div>
+    </div>
+    <div style="padding:8px 12px; border-top:1px solid #eee; background:#fff">
+      <div class="quick" id="quickChips">
+        <div class="chip" data-q="What is BuildMate?">What is BuildMate?</div>
+        <div class="chip" data-q="Shipping">Shipping</div>
+        <div class="chip" data-q="Warranty">Warranty</div>
+        <div class="chip" data-q="Return policy">Return policy</div>
+      </div>
+      <div class="chat-input">
+        <input placeholder="Type your question e.g. 'BuildMate features' " id="chatInput" />
+        <button class="btn" id="sendBtn">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product modal -->
+  <div class="modal" id="modal">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div style="display:flex; justify-content:space-between; align-items:center">
+        <div style="font-weight:800; font-size:18px" id="modalTitle">Product Title</div>
+        <button class="btn secondary" id="closeModal">Close</button>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <div style="flex:1; min-width:200px">
+          <div class="product-image" id="modalImage">IMG</div>
+        </div>
+        <div style="flex:1; min-width:200px">
+          <div style="font-size:16px; color:var(--accent-2); font-weight:700" id="modalPrice">₱0</div>
+          <div class="specs" id="modalDesc">Description</div>
+          <div style="margin-top:12px">
+            <button class="btn" id="addCart">Add to cart</button>
+            <button class="btn secondary" id="askBtn">Ask about this product</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// Product catalog
+const products = [
+  {id:'buildmate', title:'BuildMate™ Portable Concrete Strength Tester', price:12950, short:'Handheld device for quick strength & temperature checks. Bluetooth app included.', features:[
+    'Instant compressive strength estimate',
+    'Bluetooth app: data logging & report export',
+    'Rechargeable battery (8h)',
+    'Lightweight & rugged for field use'
+  ]},
+  {id:'hydroshield', title:'HydroShield™ Smart Drainage Panels (Set of 10)', price:8200, short:'Interlocking drainage panels for surface water control. Lightweight & recyclable.', features:[
+    'Interlocking design for quick install',
+    'UV-stable, recyclable material',
+    'Flow channels to prevent clogging',
+    'Ideal for roadside & landscaping drainage'
+  ]},
+  {id:'ecobricks', title:'EcoBricks+™ Recycled Construction Blocks (Pack of 20)', price:6200, short:'Sustainable construction blocks from recycled plastic and sand.', features:[
+    'Interlocking blocks, no mortar required',
+    'Thermally insulating & lightweight',
+    'Made from locally-sourced recycled materials',
+    'Suitable for low-cost housing and landscape walls'
+  ]},
+  {id:'civimix', title:'CiviMix™ Concrete Performance Additive (1L)', price:1450, short:'Liquid additive that improves strength & workability of concrete mixes.', features:[
+    'Adds compressive strength and water resistance',
+    'Easy-to-dose for small batches',
+    'Compatible with ordinary Portland cement mixes',
+    'Reduces microcracking during curing'
+  ]},
+  {id:'engikit', title:'EngiKit™ Educational Bridge Model Kit', price:950, short:'Educational kit for students: build and test a truss bridge model.', features:[
+    'Hands-on truss building set',
+    'Includes load-testing instructions',
+    'Reusable components and easy assembly',
+    'Perfect for labs and classroom demos'
+  ]},
+  {id:'buildwear', title:'BuildWear™ Safety Helmet & Vest Combo', price:1299, short:'Safety-certified helmet and reflective vest for site visits.', features:[
+    'Meets local safety standards',
+    'Adjustable sizing & breathable fabric',
+    'Includes company-logo customization option',
+    'Durable and easy to clean'
+  ]}
+];
+
+// render products
+const grid = document.getElementById('productGrid');
+products.forEach(p=>{
+  const el = document.createElement('div'); el.className='card';
+  el.innerHTML = `
+    <div class="product-image">${p.title.split(' ')[0]}</div>
+    <div style="margin-top:10px; font-weight:800">${p.title}</div>
+    <div style="color:var(--muted)">${p.short}</div>
+    <div class="price">₱${p.price.toLocaleString()}</div>
+    <div style="margin-top:12px; display:flex; gap:8px">
+      <button class="btn" data-id="${p.id}" data-action="view">View</button>
+      <button class="btn secondary" data-id="${p.id}" data-action="faq">Ask</button>
+    </div>`;
+  grid.appendChild(el);
+});
+
+// modal logic
+const modal = document.getElementById('modal');
+const modalTitle = document.getElementById('modalTitle');
+const modalImage = document.getElementById('modalImage');
+const modalPrice = document.getElementById('modalPrice');
+const modalDesc = document.getElementById('modalDesc');
+const closeModal = document.getElementById('closeModal');
+grid.addEventListener('click', e=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  const id = btn.dataset.id;
+  const action = btn.dataset.action;
+  const prod = products.find(x=>x.id===id);
+  if(!prod) return;
+  if(action==='view'){
+    modalTitle.textContent = prod.title;
+    modalImage.textContent = prod.title.split(' ')[0];
+    modalPrice.textContent = '₱' + prod.price.toLocaleString();
+    modalDesc.innerHTML = `<p>${prod.short}</p><div class="specs"><strong>Key features:</strong><ul>${prod.features.map(f=>`<li>${f}</li>`).join('')}</ul></div>`;
+    modal.classList.add('open');
+  } else if(action==='faq'){
+    openChatWindow();
+    addUserMessage(`Tell me about ${prod.title}`);
+  }
+});
+
+closeModal.addEventListener('click', ()=> modal.classList.remove('open'));
+
+// Chatbot simple rule-based assistant
+const openChatBtn = document.getElementById('openChat');
+const chatWindow = document.getElementById('chatWindow');
+const chatBody = document.getElementById('chatBody');
+const sendBtn = document.getElementById('sendBtn');
+const chatInput = document.getElementById('chatInput');
+const quickChips = document.getElementById('quickChips');
+
+function openChatWindow(){ chatWindow.style.display='flex'; document.getElementById('openChat').style.display='none'; chatInput.focus(); scrollChat(); }
+function closeChatWindow(){ chatWindow.style.display='none'; document.getElementById('openChat').style.display='inline-block'; }
+openChatBtn.addEventListener('click', ()=> openChatWindow());
+
+quickChips.addEventListener('click', e=> {
+  const chip = e.target.closest('.chip'); if(!chip) return;
+  chatInput.value = chip.dataset.q; sendQuery(chip.dataset.q);
+});
+
+sendBtn.addEventListener('click', ()=>{ const q = chatInput.value.trim(); if(!q) return; sendQuery(q); });
+
+chatInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); sendBtn.click(); } });
+
+function addBotMessage(text){
+  const d = document.createElement('div'); d.className='msg bot'; d.innerHTML=text; chatBody.appendChild(d); scrollChat();
+}
+function addUserMessage(text){
+  const d = document.createElement('div'); d.className='msg user'; d.textContent=text; chatBody.appendChild(d); scrollChat();
+}
+function scrollChat(){ chatBody.scrollTop = chatBody.scrollHeight; }
+
+// Knowledge base: simple intents and product feature replies
+const kb = {
+  hello: "Hello! I'm the BuildSmart Assistant. Ask me about any product (e.g. 'What is BuildMate?') or type 'menu' to see product list.",
+  menu: "Available products: " + products.map(p=>p.title).join("; "),
+  shipping: "We offer nationwide shipping across the Philippines. Standard delivery: 3-7 business days. Express shipping available at checkout.",
+  warranty: "Most electronic tools include a 1-year limited warranty. Consumables (additives, blocks) have manufacturing guarantees. See product page for details.",
+  return: "Returns accepted within 7 days of receipt for unopened items. Defective items are replaced after verification. Contact support with order number.",
+  price: "Prices are shown on each product card. We also offer student discounts during the launch period."
+};
+
+function findProductByQuery(q){
+  q = q.toLowerCase();
+  return products.find(p=> q.includes(p.id) || q.includes(p.title.split(' ')[0].toLowerCase()) || p.title.toLowerCase().includes(q));
+}
+
+function sendQuery(q){
+  addUserMessage(q);
+  chatInput.value='';
+  // simple intent detection
+  const ql = q.toLowerCase();
+  // direct kb answers
+  if(ql.includes('menu') ) return delayedResponse(kb.menu);
+  if(ql.includes('shipping')) return delayedResponse(kb.shipping);
+  if(ql.includes('warranty')) return delayedResponse(kb.warranty);
+  if(ql.includes('return')) return delayedResponse(kb.return);
+  if(ql.includes('price')) return delayedResponse(kb.price);
+  if(ql.includes('hello') || ql.includes('hi')) return delayedResponse(kb.hello);
+  // ask about product features
+  const prod = findProductByQuery(ql);
+  if(prod){
+    const lines = [`${prod.title} — ₱${prod.price.toLocaleString()}`, prod.short, 'Key features:'].concat(prod.features.map((f,i)=>`${i+1}. ${f}`));
+    return delayedResponse(lines.join('<br/>'));
+  }
+  // fallback fuzzy search: look for keywords
+  for(const p of products){
+    for(const f of p.features){
+      if(ql.includes(f.split(' ')[0].toLowerCase())){
+        return delayedResponse(`${p.title} may be relevant. Key features: ${p.features.slice(0,3).join(', ')}.`);
+      }
+    }
+  }
+  // default fallback
+  delayedResponse("Sorry, I couldn't find an exact match. Try asking 'menu' to see all products, or ask 'Shipping' or 'Warranty'. If you prefer, type 'human' to contact support.");
+}
+
+// small delay to simulate typing
+function delayedResponse(text){
+  addBotMessage('<em>typing…</em>');
+  setTimeout(()=>{
+    // remove last typing bubble
+    const nodes = chatBody.querySelectorAll('.msg.bot');
+    if(nodes.length) nodes[nodes.length-1].remove();
+    const html = (text.indexOf('<')>=0) ? text : escapeHtml(text);
+    addBotMessage(html);
+  }, 700);
+}
+
+function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// initial sample suggestions
+setTimeout(()=>{ delayedResponse("Tip: ask 'What is BuildMate?' or click a product 'Ask' button to get feature details.") }, 1000);
+
+// close chat if clicked outside
+document.addEventListener('click', (e)=>{
+  if(!chatWindow.contains(e.target) && e.target.id!=='openChat'){ /* don't auto-close for mobile */ }
+});
+
+// accessibility: allow ESC to close modal/chat
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape'){ modal.classList.remove('open'); closeChatWindow(); }
+});
+
+// ask button in modal -> send question
+document.getElementById('askBtn').addEventListener('click', ()=>{
+  const title = modalTitle.textContent;
+  openChatWindow();
+  addUserMessage(`Tell me about ${title}`);
+});
+
+</script>
+</body>
+</html>
