@@ -5,37 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BuildSmart PH - Shopee-Style Checkout</title>
 <style>
-body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:#f5f5f5;color:#333;}
-header {background:#004080;color:white;padding:40px 20px;text-align:center;}
-header h1{margin:0;font-size:2.8em;}
-header p{margin:5px 0 0;font-size:1.2em;}
-section{padding:50px 20px;max-width:1100px;margin:auto;background:white;border-radius:12px;margin-top:30px;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
-h2{color:#004080;margin-bottom:20px;}
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
-.product{background:#fff;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,0.1);padding:15px;text-align:center;transition:0.3s;}
-.product:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,0.15);}
-.product img{max-width:100%;border-radius:8px;margin-bottom:10px;}
-.product h3{margin:10px 0;color:#004080;}
-.product p{font-size:0.9em;margin-bottom:5px;}
-.price{font-weight:bold;color:#0066cc;margin-bottom:8px;}
-button{background:#004080;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;transition:0.3s;}
-button:hover{background:#0066cc;}
-#cartPanel{position:fixed;top:0;right:-400px;width:400px;height:100%;background:white;box-shadow:-4px 0 12px rgba(0,0,0,0.2);transition:0.4s;padding:20px;overflow-y:auto;z-index:999;}
-#cartPanel h3{margin-top:0;color:#004080;}
-.cart-item{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;}
-.cart-item img{width:50px;height:50px;border-radius:5px;margin-right:10px;}
-.cart-item-info{flex:1;}
-.cart-item-actions{display:flex;align-items:center;gap:5px;}
-input[type=number]{width:50px;padding:5px;border-radius:5px;border:1px solid #ccc;}
-#voucher,#shipping,#paymentMethod{width:100%;padding:8px;margin:5px 0;border-radius:5px;border:1px solid #ccc;}
-#checkoutSummary{margin-top:15px;font-weight:bold;color:#004080;}
-#chatbot{position:fixed;bottom:20px;right:420px;width:300px;max-height:400px;background:white;border:2px solid #004080;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;font-size:0.9em;}
-#chatbot-messages{flex:1;padding:10px;overflow-y:auto;background:#f0f8ff;}
-#chatbot-input{display:flex;border-top:1px solid #004080;}
-#chatbot-input input{flex:1;padding:10px;border:none;outline:none;}
-#chatbot-input button{padding:10px;border:none;background:#004080;color:white;cursor:pointer;transition:0.3s;}
-#chatbot-input button:hover{background:#0066cc;}
-@media(max-width:800px){#cartPanel{width:90%;right:-100%;}#chatbot{right:10px;}}
+body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:#f5f5f5;color:#333; }
+header { background:#004080;color:white;padding:40px 20px;text-align:center; position:relative; overflow:hidden; }
+header h1{ margin:0;font-size:2.8em; animation: slideDown 1s ease-out; }
+header p{ margin:5px 0 0;font-size:1.2em; animation: fadeIn 2s ease-in; }
+header button{ position:absolute; top:50px; right:20px; }
+@keyframes slideDown{ 0%{ transform:translateY(-50px); opacity:0; } 100%{ transform:translateY(0); opacity:1; } }
+@keyframes fadeIn{ 0%{ opacity:0;} 100%{ opacity:1; } }
+
+section{ padding:50px 20px; max-width:1100px; margin:auto; background:white; border-radius:12px; margin-top:30px; box-shadow:0 6px 20px rgba(0,0,0,0.05); }
+h2{ color:#004080; margin-bottom:20px; text-align:center; }
+.products{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
+.product{ background:#fff; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1); padding:15px; text-align:center; position:relative; overflow:hidden; transition:0.3s; }
+.product:hover{ transform:translateY(-5px); box-shadow:0 10px 20px rgba(0,0,0,0.2); }
+.product img{ max-width:100%; border-radius:8px; margin-bottom:10px; transition: transform 0.3s; }
+.product:hover img{ transform:scale(1.05); }
+
+/* Floating Add to Cart button */
+.add-cart-btn { position:absolute; bottom:-50px; left:50%; transform:translateX(-50%); background:#004080; color:white; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; transition:0.3s; opacity:0; }
+.product:hover .add-cart-btn { bottom:15px; opacity:1; }
+
+.product h3{ margin:10px 0; color:#004080; }
+.product p{ font-size:0.9em; margin-bottom:5px; }
+.price{ font-weight:bold;color:#0066cc;margin-bottom:8px; font-size:1.1em; }
+
+#cartPanel{ position:fixed; top:0; right:-420px; width:400px; height:100%; background:white; box-shadow:-4px 0 12px rgba(0,0,0,0.3); transition:0.4s; padding:20px; overflow-y:auto; z-index:999; border-radius:0 12px 12px 0; }
+#cartPanel h3{ margin-top:0;color:#004080; text-align:center; }
+.cart-item{ display:flex; align-items:center; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px; transition:0.3s; }
+.cart-item:hover{ background:#f0f8ff; border-radius:8px; }
+.cart-item img{ width:50px;height:50px;border-radius:5px;margin-right:10px; transition: transform 0.3s; }
+.cart-item img:hover{ transform:scale(1.1); }
+.cart-item-info{ flex:1; }
+.cart-item-actions{ display:flex; align-items:center; gap:5px; }
+input[type=number]{ width:50px; padding:5px; border-radius:5px; border:1px solid #ccc; }
+#voucher,#shipping,#paymentMethod,input[type=text],input[type=email]{ width:100%; padding:8px; margin:5px 0; border-radius:5px; border:1px solid #ccc; }
+#checkoutSummary{ margin-top:15px; font-weight:bold; color:#004080; text-align:center; }
+#chatbot{ position:fixed; bottom:20px; right:440px; width:320px; max-height:400px; background:white; border:2px solid #004080; border-radius:12px; overflow:hidden; display:flex; flex-direction:column; font-size:0.9em; }
+#chatbot-messages{ flex:1; padding:10px; overflow-y:auto; background:#f0f8ff; }
+#chatbot-input{ display:flex; border-top:1px solid #004080; }
+#chatbot-input input{ flex:1; padding:10px; border:none; outline:none; }
+#chatbot-input button{ padding:10px; border:none; background:#004080; color:white; cursor:pointer; transition:0.3s; }
+#chatbot-input button:hover{ background:#0066cc; }
+
+@media(max-width:800px){
+  .products{ grid-template-columns:1fr; }
+  #cartPanel{ width:90%; right:-100%; }
+  #chatbot{ right:10px; width:280px; }
+}
 </style>
 </head>
 <body>
@@ -50,33 +66,34 @@ input[type=number]{width:50px;padding:5px;border-radius:5px;border:1px solid #cc
   <h2>Our Products</h2>
   <div class="products">
     <div class="product">
-      <img src="https://via.placeholder.com/150x100?text=BuildMate™" alt="BuildMate">
+      <img src="assets/buildmate.jpg" alt="BuildMate™">
       <h3>BuildMate™</h3>
       <p>Smart construction tool for engineers and students.</p>
       <div class="price">₱1,500</div>
       <input type="number" id="qty-BuildMate" value="1" min="1">
-      <button onclick="addToCart('BuildMate™', parseInt(document.getElementById('qty-BuildMate').value), 1500,'https://via.placeholder.com/150x100?text=BuildMate™')">Add to Cart</button>
+      <button class="add-cart-btn" onclick="addToCart('BuildMate™', parseInt(document.getElementById('qty-BuildMate').value), 1500,'assets/buildmate.jpg')">Add to Cart</button>
     </div>
+
     <div class="product">
-      <img src="https://via.placeholder.com/150x100?text=EcoBricks+" alt="EcoBricks+">
+      <img src="assets/ecobricks.jpg" alt="EcoBricks+">
       <h3>EcoBricks+</h3>
-      <p>Sustainable bricks made for eco-friendly projects.</p>
+      <p>Sustainable bricks for eco-friendly projects.</p>
       <div class="price">₱2,000</div>
       <input type="number" id="qty-EcoBricks" value="1" min="1">
-      <button onclick="addToCart('EcoBricks+', parseInt(document.getElementById('qty-EcoBricks').value), 2000,'https://via.placeholder.com/150x100?text=EcoBricks+')">Add to Cart</button>
+      <button class="add-cart-btn" onclick="addToCart('EcoBricks+', parseInt(document.getElementById('qty-EcoBricks').value), 2000,'assets/ecobricks.jpg')">Add to Cart</button>
     </div>
+
     <div class="product">
-      <img src="https://via.placeholder.com/150x100?text=HydroShield™" alt="HydroShield">
+      <img src="assets/hydroshield.jpg" alt="HydroShield™">
       <h3>HydroShield™</h3>
       <p>Advanced water-resistant construction coating.</p>
       <div class="price">₱2,500</div>
       <input type="number" id="qty-HydroShield" value="1" min="1">
-      <button onclick="addToCart('HydroShield™', parseInt(document.getElementById('qty-HydroShield').value), 2500,'https://via.placeholder.com/150x100?text=HydroShield™')">Add to Cart</button>
+      <button class="add-cart-btn" onclick="addToCart('HydroShield™', parseInt(document.getElementById('qty-HydroShield').value), 2500,'assets/hydroshield.jpg')">Add to Cart</button>
     </div>
   </div>
 </section>
 
-<!-- Shopee-Style Cart Panel -->
 <div id="cartPanel">
   <h3>Your Cart</h3>
   <div id="cartItems"></div>
@@ -90,23 +107,23 @@ input[type=number]{width:50px;padding:5px;border-radius:5px;border:1px solid #cc
     <option value="50">Pickup (₱50)</option>
   </select>
   <label>Payment Method:</label>
-  <select id="paymentMethod">
+  <select id="paymentMethod" onchange="showPaymentDetails()">
     <option value="Credit Card">Credit Card</option>
     <option value="GCash">GCash</option>
     <option value="PayPal">PayPal</option>
     <option value="COD">Cash on Delivery</option>
   </select>
+
+  <div id="paymentDetails" style="margin-top:10px;"></div>
+
   <div id="checkoutSummary"></div>
   <button onclick="checkout()">Checkout</button>
-
-  <!-- Hidden FormSubmit form for e-receipt email -->
   <form id="orderForm" action="https://formsubmit.co/lacsimarrainier24@gmail.com" method="POST" target="_blank" style="display:none;">
     <input type="hidden" name="_subject" value="BuildSmart PH Order">
     <input type="hidden" name="orderDetails" id="orderDetails">
   </form>
 </div>
 
-<!-- AI Assistant -->
 <div id="chatbot">
   <div id="chatbot-messages"></div>
   <div id="chatbot-input">
@@ -116,132 +133,50 @@ input[type=number]{width:50px;padding:5px;border-radius:5px;border:1px solid #cc
 </div>
 
 <script>
-// --- Cart System ---
-let cart = {};
-let voucherDiscount = 0;
-
-function addToCart(name, qty, price, img){
-  if(cart[name]) cart[name].qty += qty;
-  else cart[name] = {qty: qty, price: price, img: img};
-  renderCart();
-  toggleCart(true);
-}
-
-function removeItem(name){
-  delete cart[name];
-  renderCart();
-}
-
-function renderCart(){
-  let container = document.getElementById('cartItems');
-  container.innerHTML = '';
-  for(const [name, item] of Object.entries(cart)){
-    const div = document.createElement('div');
-    div.classList.add('cart-item');
-    div.innerHTML = `
-      <img src="${item.img}" alt="${name}">
-      <div class="cart-item-info">
-        <strong>${name}</strong><br>₱${item.price.toLocaleString()}
-      </div>
-      <div class="cart-item-actions">
-        <input type="number" value="${item.qty}" min="1" onchange="updateQty('${name}',this.value)">
-        <button onclick="removeItem('${name}')">Remove</button>
-      </div>
-    `;
-    container.appendChild(div);
-  }
-  updateCartSummary();
-}
-
-function updateQty(name, qty){
-  cart[name].qty = parseInt(qty);
-  updateCartSummary();
-}
-
-function toggleCart(open){
-  const panel = document.getElementById('cartPanel');
-  panel.style.right = open===false ? '-400px' : '0';
-}
-
-function applyVoucher(){
-  const code = document.getElementById('voucher').value.trim();
-  if(code==='DISCOUNT50'){ voucherDiscount=50; alert('Voucher applied! ₱50 discount');}
-  else {voucherDiscount=0; alert('Invalid voucher');}
-  updateCartSummary();
-}
-
-function updateCartSummary(){
-  let total=0;
-  for(const item of Object.values(cart)) total += item.qty*item.price;
-  const shippingFee = parseInt(document.getElementById('shipping').value);
-  const finalTotal = total + shippingFee - voucherDiscount;
-  document.getElementById('checkoutSummary').innerHTML = `
-    Subtotal: ₱${total.toLocaleString()}<br>
-    Shipping: ₱${shippingFee.toLocaleString()}<br>
-    Discount: ₱${voucherDiscount}<br>
-    <strong>Total: ₱${finalTotal.toLocaleString()}</strong>
-  `;
-}
-
-// Checkout simulation / e-receipt email
+// --- Cart & Checkout
+let cart={}, voucherDiscount=0;
+function addToCart(name,qty,price,img){if(cart[name]) cart[name].qty+=qty; else cart[name]={qty,price,img}; renderCart(); toggleCart(true);}
+function removeItem(name){delete cart[name]; renderCart();}
+function renderCart(){let container=document.getElementById('cartItems'); container.innerHTML=''; for(const[name,item] of Object.entries(cart)){const div=document.createElement('div'); div.classList.add('cart-item'); div.innerHTML=`<img src="${item.img}" alt="${name}"><div class="cart-item-info"><strong>${name}</strong><br>₱${item.price.toLocaleString()}</div><div class="cart-item-actions"><input type="number" value="${item.qty}" min="1" onchange="updateQty('${name}',this.value)"><button onclick="removeItem('${name}')">Remove</button></div>`; container.appendChild(div);} updateCartSummary();}
+function updateQty(name,qty){cart[name]=cart[name]||{}; cart[name].qty=parseInt(qty); updateCartSummary();}
+function toggleCart(open){document.getElementById('cartPanel').style.right=open===false?'-420px':'0';}
+function applyVoucher(){const code=document.getElementById('voucher').value.trim(); voucherDiscount=(code==='DISCOUNT50')?50:0; alert(voucherDiscount? 'Voucher applied! ₱50 discount':'Invalid voucher'); updateCartSummary();}
+function updateCartSummary(){let total=0; for(const item of Object.values(cart)) total+=item.qty*item.price; const shippingFee=parseInt(document.getElementById('shipping').value); const finalTotal=total+shippingFee-voucherDiscount; document.getElementById('checkoutSummary').innerHTML=`Subtotal: ₱${total.toLocaleString()}<br>Shipping: ₱${shippingFee.toLocaleString()}<br>Discount: ₱${voucherDiscount}<br><strong>Total: ₱${finalTotal.toLocaleString()}</strong>`;}
+function showPaymentDetails(){const method=document.getElementById('paymentMethod').value; const container=document.getElementById('paymentDetails'); container.innerHTML=''; if(method==='Credit Card'){container.innerHTML=`<input type="text" id="ccNumber" placeholder="Card Number"><br><input type="text" id="ccExpiry" placeholder="MM/YY"><br><input type="text" id="ccCVV" placeholder="CVV">`; }else if(method==='GCash'){container.innerHTML=`<input type="text" id="gcashNumber" placeholder="GCash Number">`; }else if(method==='PayPal'){container.innerHTML=`<input type="email" id="paypalEmail" placeholder="PayPal Email">`; } else{ container.innerHTML=''; } }
 function checkout(){
   if(Object.keys(cart).length===0){alert('Cart is empty'); return;}
-
-  let receipt = '🎫 BuildSmart PH E-Receipt 🎫\n\n';
-  for(const [name, item] of Object.entries(cart)){
-    receipt += `${name} x${item.qty} - ₱${(item.price*item.qty).toLocaleString()}\n`;
-  }
-
-  const shippingFee = parseInt(document.getElementById('shipping').value);
-  const paymentMethod = document.getElementById('paymentMethod').value;
-  const finalTotal = Object.values(cart).reduce((sum,i)=>sum+i.price*i.qty,0)+shippingFee-voucherDiscount;
-
-  receipt += `\nShipping Fee: ₱${shippingFee}\nDiscount: ₱${voucherDiscount}\nTotal: ₱${finalTotal}\nPayment Method: ${paymentMethod}`;
-
+  const method=document.getElementById('paymentMethod').value;
+  let paymentInfo='';
+  if(method==='Credit Card'){
+    const num=document.getElementById('ccNumber').value.trim();
+    const exp=document.getElementById('ccExpiry').value.trim();
+    const cvv=document.getElementById('ccCVV').value.trim();
+    if(!num||!exp||!cvv){alert('Please fill all credit card fields'); return;}
+    paymentInfo=`Card Number: ${num}, Expiry: ${exp}, CVV: ${cvv}`;
+  }else if(method==='GCash'){
+    const num=document.getElementById('gcashNumber').value.trim();
+    if(!num){alert('Please enter GCash number'); return;}
+    paymentInfo=`GCash Number: ${num}`;
+  }else if(method==='PayPal'){
+    const email=document.getElementById('paypalEmail').value.trim();
+    if(!email){alert('Please enter PayPal email'); return;}
+    paymentInfo=`PayPal Email: ${email}`;
+  }else paymentInfo='Cash on Delivery';
+  let receipt='🎫 BuildSmart PH E-Receipt 🎫\n\n';
+  for(const [name,item] of Object.entries(cart)) receipt+=`${name} x${item.qty} - ₱${(item.price*item.qty).toLocaleString()}\n`;
+  const shippingFee=parseInt(document.getElementById('shipping').value);
+  const finalTotal=Object.values(cart).reduce((sum,i)=>sum+i.price*i.qty,0)+shippingFee-voucherDiscount;
+  receipt+=`\nShipping Fee: ₱${shippingFee}\nDiscount: ₱${voucherDiscount}\nTotal: ₱${finalTotal}\nPayment Method: ${method}\n${paymentInfo}`;
   alert(receipt);
-
-  // Send e-receipt via FormSubmit
-  const form = document.getElementById('orderForm');
-  document.getElementById('orderDetails').value = receipt;
-  form.submit();
-
-  cart = {}; voucherDiscount = 0;
-  renderCart();
-  toggleCart(false);
+  const form=document.getElementById('orderForm'); document.getElementById('orderDetails').value=receipt; form.submit();
+  cart={}; voucherDiscount=0; renderCart(); toggleCart(false);
 }
 
-// --- Offline AI Assistant ---
+// --- AI Assistant ---
 const chatbotMessages=document.getElementById('chatbot-messages');
-const productInfo={
-  buildmate:{name:"BuildMate™",price:"₱1,500",description:"Smart construction tool for engineers and students."},
-  ecobricks:{name:"EcoBricks+",price:"₱2,000",description:"Sustainable bricks for eco-friendly projects."},
-  hydroshield:{name:"HydroShield™",price:"₱2,500",description:"Advanced water-resistant construction coating."}
-};
-
-function sendMessage(){
-  const inputRaw=document.getElementById('userInput').value.trim();
-  const input=inputRaw.toLowerCase();
-  if(!input) return;
-  appendMessage('You',inputRaw);
-  document.getElementById('userInput').value='';
-  let reply="Sorry, I didn't understand that. Try asking about products or how to order.";
-  if(input.includes('hello')||input.includes('hi')) reply='Hello! I can help with products or checkout.';
-  else if(input.includes('order')) reply='Add products to cart, choose shipping, apply voucher, then checkout.';
-  else if(input.includes('products')) reply='We have BuildMate™, EcoBricks+, HydroShield™. Ask me about any!';
-  else { for(const key in productInfo){ if(input.includes(key)){
-    const p=productInfo[key]; reply=`${p.name} - ${p.description} Price: ${p.price}.`;
-    if(input.includes('buy')||input.includes('add to cart')){addToCart(p.name,1,parseInt(p.price.replace(/₱|,/g,'')),`https://via.placeholder.com/150x100?text=${p.name}`); reply+=' 1 unit added to cart!';}
-    break;
-  }}}
-  appendMessage('Assistant',reply);
-}
-
-function appendMessage(sender,message){
-  const msg=document.createElement('div');
-  msg.innerHTML=`<strong>${sender}:</strong> ${message}`;
-  chatbotMessages.appendChild(msg);
-  chatbotMessages.scrollTop=chatbotMessages.scrollHeight;
-}
+const productInfo={buildmate:{name:"BuildMate™",price:"₱1,500",description:"Smart construction tool for engineers and students."}, ecobricks:{name:"EcoBricks+",price:"₱2,000",description:"Sustainable bricks for eco-friendly projects."}, hydroshield:{name:"HydroShield™",price:"₱2,500",description:"Advanced water-resistant construction coating."}};
+function sendMessage(){const inputRaw=document.getElementById('userInput').value.trim(); const input=inputRaw.toLowerCase(); if(!input) return; appendMessage('You',inputRaw); document.getElementById('userInput').value=''; let reply="Sorry, I didn't understand that. Try asking about products or how to order."; if(input.includes('hello')||input.includes('hi')) reply='Hello! I can help with products or checkout.'; else if(input.includes('order')) reply='Add products to cart, choose shipping, apply voucher, then checkout.'; else if(input.includes('products')) reply='We have BuildMate™, EcoBricks+, HydroShield™. Ask me about any!'; else{for(const key in productInfo){if(input.includes(key)){const p=productInfo[key]; reply=`${p.name} - ${p.description} Price: ${p.price}.`; if(input.includes('buy')||input.includes('add to cart')){addToCart(p.name,1,parseInt(p.price.replace(/₱|,/g,'')),`assets/${key}.jpg`); reply+=' 1 unit added to cart!';} break;}}} appendMessage('Assistant',reply);}
+function appendMessage(sender,message){ const msg=document.createElement('div'); msg.innerHTML=`<strong>${sender}:</strong> ${message}`; chatbotMessages.appendChild(msg); chatbotMessages.scrollTop=chatbotMessages.scrollHeight; }
 appendMessage('Assistant','Hi! I am your BuildSmart PH assistant. Ask me about products, vouchers, shipping, or checkout!');
 </script>
 
