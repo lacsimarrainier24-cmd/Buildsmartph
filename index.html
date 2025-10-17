@@ -3,37 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BuildSmart PH</title>
+<title>BuildSmart PH - Shopee-Style Checkout</title>
 <style>
-  body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:#f5f5f5;color:#333;line-height:1.6;}
-  a {color:#004080;text-decoration:none;} a:hover{text-decoration:underline;}
-  header {background:#004080;color:white;padding:50px 20px;text-align:center;}
-  header h1{margin:0;font-size:3em;letter-spacing:2px;}
-  header p{margin:10px 0 0;font-size:1.2em;}
-  section{padding:60px 20px;max-width:1100px;margin:auto;background:white;border-radius:10px;margin-top:40px;box-shadow:0 4px 8px rgba(0,0,0,0.05);}
-  h2{color:#004080;margin-bottom:25px;border-bottom:2px solid #004080;display:inline-block;padding-bottom:5px;}
-  .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;}
-  .product{background:#fff;border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,0.1);padding:20px;text-align:center;transition:transform 0.3s,box-shadow 0.3s;}
-  .product:hover{transform:translateY(-5px);box-shadow:0 8px 20px rgba(0,0,0,0.15);}
-  .product img{max-width:100%;border-radius:10px;margin-bottom:15px;}
-  .product h3{margin:10px 0;color:#004080;}
-  .product p{font-size:0.95em;margin-bottom:10px;}
-  .price{font-weight:bold;color:#0066cc;margin-bottom:10px;}
-  .quantity{display:flex;justify-content:center;align-items:center;gap:10px;margin-bottom:15px;}
-  .quantity input{width:50px;text-align:center;padding:5px;border-radius:5px;border:1px solid #ccc;}
-  button{background:#004080;color:white;border:none;padding:12px 25px;border-radius:8px;cursor:pointer;font-weight:bold;transition:background 0.3s;}
-  button:hover{background:#0066cc;}
-  form{display:flex;flex-direction:column;gap:15px;}
-  input,textarea{padding:12px;border-radius:8px;border:1px solid #ccc;font-size:1em;width:100%;}
-  textarea{resize:none;}
-  footer{background:#004080;color:white;text-align:center;padding:25px;margin-top:40px;border-top:5px solid #0066cc;}
-  #chatbot{position:fixed;bottom:20px;right:20px;width:300px;max-height:400px;background:white;border:2px solid #004080;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;font-size:0.9em;}
-  #chatbot-messages{flex:1;padding:10px;overflow-y:auto;background:#f0f8ff;}
-  #chatbot-input{display:flex;border-top:1px solid #004080;}
-  #chatbot-input input{flex:1;padding:10px;border:none;outline:none;}
-  #chatbot-input button{padding:10px;border:none;background:#004080;color:white;cursor:pointer;transition:background 0.3s;}
-  #chatbot-input button:hover{background:#0066cc;}
-  @media (max-width:600px){header h1{font-size:2em;}.products{grid-template-columns:1fr;}}
+body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin:0;padding:0;background:#f5f5f5;color:#333;}
+header {background:#004080;color:white;padding:40px 20px;text-align:center;}
+header h1{margin:0;font-size:2.8em;}
+header p{margin:5px 0 0;font-size:1.2em;}
+section{padding:50px 20px;max-width:1100px;margin:auto;background:white;border-radius:12px;margin-top:30px;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
+h2{color:#004080;margin-bottom:20px;}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;}
+.product{background:#fff;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,0.1);padding:15px;text-align:center;transition:0.3s;}
+.product:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,0.15);}
+.product img{max-width:100%;border-radius:8px;margin-bottom:10px;}
+.product h3{margin:10px 0;color:#004080;}
+.product p{font-size:0.9em;margin-bottom:5px;}
+.price{font-weight:bold;color:#0066cc;margin-bottom:8px;}
+button{background:#004080;color:white;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;transition:0.3s;}
+button:hover{background:#0066cc;}
+#cartPanel{position:fixed;top:0;right:-400px;width:400px;height:100%;background:white;box-shadow:-4px 0 12px rgba(0,0,0,0.2);transition:0.4s;padding:20px;overflow-y:auto;z-index:999;}
+#cartPanel h3{margin-top:0;color:#004080;}
+.cart-item{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;border-bottom:1px solid #eee;padding-bottom:10px;}
+.cart-item img{width:50px;height:50px;border-radius:5px;margin-right:10px;}
+.cart-item-info{flex:1;}
+.cart-item-actions{display:flex;align-items:center;gap:5px;}
+input[type=number]{width:50px;padding:5px;border-radius:5px;border:1px solid #ccc;}
+#voucher,#shipping,#paymentMethod{width:100%;padding:8px;margin:5px 0;border-radius:5px;border:1px solid #ccc;}
+#checkoutSummary{margin-top:15px;font-weight:bold;color:#004080;}
+#chatbot{position:fixed;bottom:20px;right:420px;width:300px;max-height:400px;background:white;border:2px solid #004080;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;font-size:0.9em;}
+#chatbot-messages{flex:1;padding:10px;overflow-y:auto;background:#f0f8ff;}
+#chatbot-input{display:flex;border-top:1px solid #004080;}
+#chatbot-input input{flex:1;padding:10px;border:none;outline:none;}
+#chatbot-input button{padding:10px;border:none;background:#004080;color:white;cursor:pointer;transition:0.3s;}
+#chatbot-input button:hover{background:#0066cc;}
+@media(max-width:800px){#cartPanel{width:90%;right:-100%;}#chatbot{right:10px;}}
 </style>
 </head>
 <body>
@@ -41,71 +43,70 @@
 <header>
   <h1>BuildSmart PH</h1>
   <p>Smart & Sustainable Civil Engineering Solutions</p>
+  <button onclick="toggleCart()">🛒 View Cart</button>
 </header>
-
-<section id="about">
-  <h2>About Us</h2>
-  <p><strong>BuildSmart PH</strong> is a Filipino startup dedicated to improving the construction industry through smart, sustainable, and accessible civil engineering solutions.</p>
-</section>
 
 <section id="products">
   <h2>Our Products</h2>
   <div class="products">
     <div class="product">
-      <img src="https://via.placeholder.com/220x150?text=BuildMate™" alt="BuildMate">
+      <img src="https://via.placeholder.com/150x100?text=BuildMate™" alt="BuildMate">
       <h3>BuildMate™</h3>
       <p>Smart construction tool for engineers and students.</p>
       <div class="price">₱1,500</div>
-      <div class="quantity"><label>Qty:</label><input type="number" id="qty-BuildMate" value="1" min="1"></div>
-      <button onclick="addToCart('BuildMate™', parseInt(document.getElementById('qty-BuildMate').value), 1500)">Add to Cart</button>
+      <input type="number" id="qty-BuildMate" value="1" min="1">
+      <button onclick="addToCart('BuildMate™', parseInt(document.getElementById('qty-BuildMate').value), 1500,'https://via.placeholder.com/150x100?text=BuildMate™')">Add to Cart</button>
     </div>
     <div class="product">
-      <img src="https://via.placeholder.com/220x150?text=EcoBricks+" alt="EcoBricks+">
+      <img src="https://via.placeholder.com/150x100?text=EcoBricks+" alt="EcoBricks+">
       <h3>EcoBricks+</h3>
       <p>Sustainable bricks made for eco-friendly projects.</p>
       <div class="price">₱2,000</div>
-      <div class="quantity"><label>Qty:</label><input type="number" id="qty-EcoBricks" value="1" min="1"></div>
-      <button onclick="addToCart('EcoBricks+', parseInt(document.getElementById('qty-EcoBricks').value), 2000)">Add to Cart</button>
+      <input type="number" id="qty-EcoBricks" value="1" min="1">
+      <button onclick="addToCart('EcoBricks+', parseInt(document.getElementById('qty-EcoBricks').value), 2000,'https://via.placeholder.com/150x100?text=EcoBricks+')">Add to Cart</button>
     </div>
     <div class="product">
-      <img src="https://via.placeholder.com/220x150?text=HydroShield™" alt="HydroShield">
+      <img src="https://via.placeholder.com/150x100?text=HydroShield™" alt="HydroShield">
       <h3>HydroShield™</h3>
       <p>Advanced water-resistant construction coating.</p>
       <div class="price">₱2,500</div>
-      <div class="quantity"><label>Qty:</label><input type="number" id="qty-HydroShield" value="1" min="1"></div>
-      <button onclick="addToCart('HydroShield™', parseInt(document.getElementById('qty-HydroShield').value), 2500)">Add to Cart</button>
+      <input type="number" id="qty-HydroShield" value="1" min="1">
+      <button onclick="addToCart('HydroShield™', parseInt(document.getElementById('qty-HydroShield').value), 2500,'https://via.placeholder.com/150x100?text=HydroShield™')">Add to Cart</button>
     </div>
   </div>
 </section>
 
-<section id="order">
-  <h2>Place Your Order</h2>
-  <form id="orderForm" action="https://formsubmit.co/lacsimarrainier24@gmail.com" method="POST">
-    <input type="hidden" name="_subject" value="New BuildSmart PH Order">
-    <input type="text" name="name" placeholder="Your Name" required>
-    <input type="email" name="email" placeholder="Your Email" required>
-    <input type="text" name="address" placeholder="Your Address" required>
-    <input type="tel" name="phone" placeholder="Your Phone Number" required>
-    <textarea name="orderDetails" id="orderDetails" placeholder="Products in your cart" rows="8" readonly></textarea>
-    <button type="submit">Submit Order</button>
+<!-- Shopee-Style Cart Panel -->
+<div id="cartPanel">
+  <h3>Your Cart</h3>
+  <div id="cartItems"></div>
+  <label>Voucher Code:</label>
+  <input type="text" id="voucher" placeholder="Enter voucher">
+  <button onclick="applyVoucher()">Apply Voucher</button>
+  <label>Shipping Option:</label>
+  <select id="shipping" onchange="updateCartSummary()">
+    <option value="0">Standard (₱0)</option>
+    <option value="100">Express (₱100)</option>
+    <option value="50">Pickup (₱50)</option>
+  </select>
+  <label>Payment Method:</label>
+  <select id="paymentMethod">
+    <option value="Credit Card">Credit Card</option>
+    <option value="GCash">GCash</option>
+    <option value="PayPal">PayPal</option>
+    <option value="COD">Cash on Delivery</option>
+  </select>
+  <div id="checkoutSummary"></div>
+  <button onclick="checkout()">Checkout</button>
+
+  <!-- Hidden FormSubmit form for e-receipt email -->
+  <form id="orderForm" action="https://formsubmit.co/lacsimarrainier24@gmail.com" method="POST" target="_blank" style="display:none;">
+    <input type="hidden" name="_subject" value="BuildSmart PH Order">
+    <input type="hidden" name="orderDetails" id="orderDetails">
   </form>
-</section>
+</div>
 
-<section id="contact">
-  <h2>Contact Us</h2>
-  <form action="https://formsubmit.co/lacsimarrainier24@gmail.com" method="POST">
-    <input type="text" name="name" placeholder="Your Name" required>
-    <input type="email" name="email" placeholder="Your Email" required>
-    <textarea name="message" placeholder="Your Message" rows="4" required></textarea>
-    <button type="submit">Send Message</button>
-  </form>
-  <p>Email us directly at: <a href="mailto:lacsimarrainier24@gmail.com">lacsimarrainier24@gmail.com</a></p>
-</section>
-
-<footer>
-  <p>University of Luzon • TECH-1 • Rainier Ramiscal</p>
-</footer>
-
+<!-- AI Assistant -->
 <div id="chatbot">
   <div id="chatbot-messages"></div>
   <div id="chatbot-input">
@@ -115,82 +116,133 @@
 </div>
 
 <script>
-  // Cart with Prices
-  let cart = {};
-  let prices = { "BuildMate™":1500, "EcoBricks+":2000, "HydroShield™":2500 };
+// --- Cart System ---
+let cart = {};
+let voucherDiscount = 0;
 
-  function addToCart(product, qty, price) {
-    if(cart[product]) cart[product].qty += qty;
-    else cart[product] = { qty: qty, price: price };
-    updateCartTextarea();
-    alert(qty + ' x ' + product + ' added to cart!');
+function addToCart(name, qty, price, img){
+  if(cart[name]) cart[name].qty += qty;
+  else cart[name] = {qty: qty, price: price, img: img};
+  renderCart();
+  toggleCart(true);
+}
+
+function removeItem(name){
+  delete cart[name];
+  renderCart();
+}
+
+function renderCart(){
+  let container = document.getElementById('cartItems');
+  container.innerHTML = '';
+  for(const [name, item] of Object.entries(cart)){
+    const div = document.createElement('div');
+    div.classList.add('cart-item');
+    div.innerHTML = `
+      <img src="${item.img}" alt="${name}">
+      <div class="cart-item-info">
+        <strong>${name}</strong><br>₱${item.price.toLocaleString()}
+      </div>
+      <div class="cart-item-actions">
+        <input type="number" value="${item.qty}" min="1" onchange="updateQty('${name}',this.value)">
+        <button onclick="removeItem('${name}')">Remove</button>
+      </div>
+    `;
+    container.appendChild(div);
+  }
+  updateCartSummary();
+}
+
+function updateQty(name, qty){
+  cart[name].qty = parseInt(qty);
+  updateCartSummary();
+}
+
+function toggleCart(open){
+  const panel = document.getElementById('cartPanel');
+  panel.style.right = open===false ? '-400px' : '0';
+}
+
+function applyVoucher(){
+  const code = document.getElementById('voucher').value.trim();
+  if(code==='DISCOUNT50'){ voucherDiscount=50; alert('Voucher applied! ₱50 discount');}
+  else {voucherDiscount=0; alert('Invalid voucher');}
+  updateCartSummary();
+}
+
+function updateCartSummary(){
+  let total=0;
+  for(const item of Object.values(cart)) total += item.qty*item.price;
+  const shippingFee = parseInt(document.getElementById('shipping').value);
+  const finalTotal = total + shippingFee - voucherDiscount;
+  document.getElementById('checkoutSummary').innerHTML = `
+    Subtotal: ₱${total.toLocaleString()}<br>
+    Shipping: ₱${shippingFee.toLocaleString()}<br>
+    Discount: ₱${voucherDiscount}<br>
+    <strong>Total: ₱${finalTotal.toLocaleString()}</strong>
+  `;
+}
+
+// Checkout simulation / e-receipt email
+function checkout(){
+  if(Object.keys(cart).length===0){alert('Cart is empty'); return;}
+
+  let receipt = '🎫 BuildSmart PH E-Receipt 🎫\n\n';
+  for(const [name, item] of Object.entries(cart)){
+    receipt += `${name} x${item.qty} - ₱${(item.price*item.qty).toLocaleString()}\n`;
   }
 
-  function updateCartTextarea() {
-    let cartText = '';
-    let totalQty = 0;
-    let totalPrice = 0;
-    for(const [product, info] of Object.entries(cart)) {
-      let subtotal = info.qty * info.price;
-      cartText += `${product} - Qty: ${info.qty} - ₱${subtotal.toLocaleString()}\n`;
-      totalQty += info.qty;
-      totalPrice += subtotal;
-    }
-    cartText += `\nTotal items: ${totalQty}\nTotal price: ₱${totalPrice.toLocaleString()}`;
-    document.getElementById('orderDetails').value = cartText;
-  }
+  const shippingFee = parseInt(document.getElementById('shipping').value);
+  const paymentMethod = document.getElementById('paymentMethod').value;
+  const finalTotal = Object.values(cart).reduce((sum,i)=>sum+i.price*i.qty,0)+shippingFee-voucherDiscount;
 
-  // Offline AI Assistant - Upgraded with Product Suggestions
-  const chatbotMessages = document.getElementById('chatbot-messages');
-  const productInfo = {
-    "buildmate": {name:"BuildMate™", price:"₱1,500", description:"Smart construction tool for engineers and students."},
-    "ecobricks": {name:"EcoBricks+", price:"₱2,000", description:"Sustainable bricks made for eco-friendly projects."},
-    "hydroshield": {name:"HydroShield™", price:"₱2,500", description:"Advanced water-resistant construction coating."}
-  };
+  receipt += `\nShipping Fee: ₱${shippingFee}\nDiscount: ₱${voucherDiscount}\nTotal: ₱${finalTotal}\nPayment Method: ${paymentMethod}`;
 
-  function sendMessage() {
-    const inputRaw = document.getElementById('userInput').value.trim();
-    const input = inputRaw.toLowerCase();
-    if(!input) return;
-    appendMessage('You', inputRaw);
-    document.getElementById('userInput').value = '';
-    let reply = "Sorry, I didn't understand that. Try asking about products or how to order.";
+  alert(receipt);
 
-    // Greetings
-    if(input.includes('hello') || input.includes('hi')) reply = 'Hello! Welcome to BuildSmart PH! I can help you with products or orders.';
-    // Ordering
-    else if(input.includes('order')) reply = 'To place an order, select products, set quantity, and fill out the order form below.';
-    // Contact
-    else if(input.includes('contact')) reply = 'You can reach us via the contact form or email us at lacsimarrainier24@gmail.com';
-    // Product listing
-    else if(input.includes('products')) reply = 'We offer BuildMate™, EcoBricks+, and HydroShield™. Ask me about any of them!';
-    // Product-specific answers
-    else {
-      for(const key in productInfo) {
-        if(input.includes(key)) {
-          const p = productInfo[key];
-          reply = `${p.name} - ${p.description} Price: ${p.price}.`;
-          // Suggest adding to cart
-          if(input.includes('buy') || input.includes('add to cart')) {
-            addToCart(p.name, 1, parseInt(p.price.replace(/₱|,/g,'')));
-            reply += ` 1 unit has been added to your cart!`;
-          }
-          break;
-        }
-      }
-    }
-    appendMessage('Assistant', reply);
-  }
+  // Send e-receipt via FormSubmit
+  const form = document.getElementById('orderForm');
+  document.getElementById('orderDetails').value = receipt;
+  form.submit();
 
-  function appendMessage(sender,message){
-    const msg=document.createElement('div');
-    msg.innerHTML=`<strong>${sender}:</strong> ${message}`;
-    chatbotMessages.appendChild(msg);
-    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-  }
+  cart = {}; voucherDiscount = 0;
+  renderCart();
+  toggleCart(false);
+}
 
-  // Auto-greet
-  appendMessage('Assistant','Hi! I am your BuildSmart PH assistant. Ask me about products, prices, or how to order!');
+// --- Offline AI Assistant ---
+const chatbotMessages=document.getElementById('chatbot-messages');
+const productInfo={
+  buildmate:{name:"BuildMate™",price:"₱1,500",description:"Smart construction tool for engineers and students."},
+  ecobricks:{name:"EcoBricks+",price:"₱2,000",description:"Sustainable bricks for eco-friendly projects."},
+  hydroshield:{name:"HydroShield™",price:"₱2,500",description:"Advanced water-resistant construction coating."}
+};
+
+function sendMessage(){
+  const inputRaw=document.getElementById('userInput').value.trim();
+  const input=inputRaw.toLowerCase();
+  if(!input) return;
+  appendMessage('You',inputRaw);
+  document.getElementById('userInput').value='';
+  let reply="Sorry, I didn't understand that. Try asking about products or how to order.";
+  if(input.includes('hello')||input.includes('hi')) reply='Hello! I can help with products or checkout.';
+  else if(input.includes('order')) reply='Add products to cart, choose shipping, apply voucher, then checkout.';
+  else if(input.includes('products')) reply='We have BuildMate™, EcoBricks+, HydroShield™. Ask me about any!';
+  else { for(const key in productInfo){ if(input.includes(key)){
+    const p=productInfo[key]; reply=`${p.name} - ${p.description} Price: ${p.price}.`;
+    if(input.includes('buy')||input.includes('add to cart')){addToCart(p.name,1,parseInt(p.price.replace(/₱|,/g,'')),`https://via.placeholder.com/150x100?text=${p.name}`); reply+=' 1 unit added to cart!';}
+    break;
+  }}}
+  appendMessage('Assistant',reply);
+}
+
+function appendMessage(sender,message){
+  const msg=document.createElement('div');
+  msg.innerHTML=`<strong>${sender}:</strong> ${message}`;
+  chatbotMessages.appendChild(msg);
+  chatbotMessages.scrollTop=chatbotMessages.scrollHeight;
+}
+appendMessage('Assistant','Hi! I am your BuildSmart PH assistant. Ask me about products, vouchers, shipping, or checkout!');
 </script>
 
 </body>
