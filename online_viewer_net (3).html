@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BuildSmart PH</title>
+  <style>
+    /* General Styles */
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; padding:0; background:#f5f5f5; line-height:1.6; color:#333; }
+    a { color:#004080; text-decoration:none; }
+    a:hover { text-decoration:underline; }
+
+    /* Header / Hero */
+    header { background:#004080; color:white; padding:50px 20px; text-align:center; }
+    header h1 { margin:0; font-size:3em; letter-spacing:2px; }
+    header p { margin:10px 0 0; font-size:1.2em; }
+
+    /* Sections */
+    section { padding:60px 20px; max-width:1100px; margin:auto; background:white; border-radius:10px; margin-top:40px; box-shadow:0 4px 8px rgba(0,0,0,0.05); }
+    h2 { color:#004080; margin-bottom:25px; border-bottom:2px solid #004080; display:inline-block; padding-bottom:5px; }
+
+    /* Products */
+    .products { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:25px; }
+    .product { background:#fff; border-radius:15px; box-shadow:0 4px 12px rgba(0,0,0,0.1); padding:20px; text-align:center; transition:transform 0.3s, box-shadow 0.3s; }
+    .product:hover { transform:translateY(-5px); box-shadow:0 8px 20px rgba(0,0,0,0.15); }
+    .product img { max-width:100%; border-radius:10px; margin-bottom:15px; }
+    .product h3 { margin:10px 0; color:#004080; }
+    .product p { font-size:0.95em; margin-bottom:10px; }
+
+    /* Quantity */
+    .quantity { display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:15px; }
+    .quantity input { width:50px; text-align:center; padding:5px; border-radius:5px; border:1px solid #ccc; }
+
+    /* Buttons */
+    button { background:#004080; color:white; border:none; padding:12px 25px; border-radius:8px; cursor:pointer; font-weight:bold; transition:background 0.3s; }
+    button:hover { background:#0066cc; }
+
+    /* Forms */
+    form { display:flex; flex-direction:column; gap:15px; }
+    input, textarea { padding:12px; border-radius:8px; border:1px solid #ccc; font-size:1em; width:100%; }
+    textarea { resize:none; }
+
+    /* Footer */
+    footer { background:#004080; color:white; text-align:center; padding:25px; margin-top:40px; border-top:5px solid #0066cc; }
+
+    /* Chatbot */
+    #chatbot { position:fixed; bottom:20px; right:20px; width:300px; max-height:400px; background:white; border:2px solid #004080; border-radius:12px; overflow:hidden; display:flex; flex-direction:column; font-size:0.9em; }
+    #chatbot-messages { flex:1; padding:10px; overflow-y:auto; background:#f0f8ff; }
+    #chatbot-input { display:flex; border-top:1px solid #004080; }
+    #chatbot-input input { flex:1; padding:10px; border:none; outline:none; }
+    #chatbot-input button { padding:10px; border:none; background:#004080; color:white; cursor:pointer; transition:background 0.3s; }
+    #chatbot-input button:hover { background:#0066cc; }
+
+    /* Responsive */
+    @media (max-width:600px){
+      header h1 { font-size:2em; }
+      .products { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header / Hero -->
+  <header>
+    <h1>BuildSmart PH</h1>
+    <p>Smart & Sustainable Civil Engineering Solutions</p>
+  </header>
+
+  <!-- Company Profile -->
+  <section id="about">
+    <h2>About Us</h2>
+    <p><strong>BuildSmart PH</strong> is a Filipino startup dedicated to improving the construction industry through smart, sustainable, and accessible civil engineering solutions.</p>
+  </section>
+
+  <!-- Product Catalog -->
+  <section id="products">
+    <h2>Our Products</h2>
+    <div class="products">
+      <div class="product">
+        <img src="https://via.placeholder.com/220x150?text=BuildMate™" alt="BuildMate">
+        <h3>BuildMate™</h3>
+        <p>Smart construction tool for engineers and students.</p>
+        <div class="quantity">
+          <label>Qty:</label>
+          <input type="number" id="qty-BuildMate" value="1" min="1">
+        </div>
+        <button onclick="addToCart('BuildMate™', parseInt(document.getElementById('qty-BuildMate').value))">Add to Cart</button>
+      </div>
+      <div class="product">
+        <img src="https://via.placeholder.com/220x150?text=EcoBricks+" alt="EcoBricks+">
+        <h3>EcoBricks+</h3>
+        <p>Sustainable bricks made for eco-friendly projects.</p>
+        <div class="quantity">
+          <label>Qty:</label>
+          <input type="number" id="qty-EcoBricks" value="1" min="1">
+        </div>
+        <button onclick="addToCart('EcoBricks+', parseInt(document.getElementById('qty-EcoBricks').value))">Add to Cart</button>
+      </div>
+      <div class="product">
+        <img src="https://via.placeholder.com/220x150?text=HydroShield™" alt="HydroShield">
+        <h3>HydroShield™</h3>
+        <p>Advanced water-resistant construction coating.</p>
+        <div class="quantity">
+          <label>Qty:</label>
+          <input type="number" id="qty-HydroShield" value="1" min="1">
+        </div>
+        <button onclick="addToCart('HydroShield™', parseInt(document.getElementById('qty-HydroShield').value))">Add to Cart</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Order Form -->
+  <section id="order">
+    <h2>Place Your Order</h2>
+    <form id="orderForm" action="https://formsubmit.co/lacsimarrainier24@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="New BuildSmart PH Order">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <input type="text" name="address" placeholder="Your Address" required>
+      <input type="tel" name="phone" placeholder="Your Phone Number" required>
+      <textarea name="orderDetails" id="orderDetails" placeholder="Products in your cart" rows="6" readonly></textarea>
+      <button type="submit">Submit Order</button>
+    </form>
+  </section>
+
+  <!-- Contact Form -->
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <form action="https://formsubmit.co/lacsimarrainier24@gmail.com" method="POST">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <textarea name="message" placeholder="Your Message" rows="4" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+    <p>Email us directly at: <a href="mailto:lacsimarrainier24@gmail.com">lacsimarrainier24@gmail.com</a></p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>University of Luzon • TECH-1 • Rainier Ramiscal</p>
+  </footer>
+
+  <!-- AI Chat Assistant -->
+  <div id="chatbot">
+    <div id="chatbot-messages"></div>
+    <div id="chatbot-input">
+      <input type="text" id="userInput" placeholder="Ask me something...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // Dynamic Cart
+    let cart = {};
+
+    function addToCart(product, qty) {
+      if(cart[product]) cart[product] += qty;
+      else cart[product] = qty;
+      updateCartTextarea();
+      alert(qty + ' x ' + product + ' added to cart!');
+    }
+
+    function updateCartTextarea() {
+      let cartText = '';
+      let totalItems = 0;
+      for(const [product, qty] of Object.entries(cart)) {
+        cartText += product + ' - Qty: ' + qty + '\n';
+        totalItems += qty;
+      }
+      cartText += '\nTotal items: ' + totalItems;
+      document.getElementById('orderDetails').value = cartText;
+    }
+
+    // Simple Offline AI Assistant
+    const chatbotMessages = document.getElementById('chatbot-messages');
+    function sendMessage() {
+      const input = document.getElementById('userInput').value.toLowerCase();
+      if(!input) return;
+      appendMessage('You', document.getElementById('userInput').value);
+      document.getElementById('userInput').value = '';
+      let reply = "Sorry, I didn't understand that.";
+      if(input.includes('hello') || input.includes('hi')) reply = 'Hello! Welcome to BuildSmart PH!';
+      else if(input.includes('order')) reply = 'To place an order, add products to your cart and fill out the order form below.';
+      else if(input.includes('buildmate')) reply = 'BuildMate™ is our smart construction tool, perfect for students and professionals.';
+      else if(input.includes('products')) reply = 'We offer BuildMate™, EcoBricks+, HydroShield™ and more!';
+      appendMessage('Assistant', reply);
+    }
+    function appendMessage(sender, message) {
+      const msg = document.createElement('div');
+      msg.innerHTML = `<strong>${sender}:</strong> ${message}`;
+      chatbotMessages.appendChild(msg);
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+
+    // Auto greet
+    appendMessage('Assistant', 'Hi there! I am your BuildSmart PH assistant. Ask me about products or how to order!');
+  </script>
+
+</body>
+</html>
