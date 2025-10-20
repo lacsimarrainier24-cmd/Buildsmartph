@@ -1,596 +1,422 @@
-          <!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>BuildSmart PH — Store (v3)</title>
-<style>
-:root{ --brand:#004080; --accent:#0066cc; --muted:#f5f7fa; --card:#fff; --danger:#e53935; }
-*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--muted);color:#222}
-header{background:linear-gradient(135deg,var(--brand),#0b4aa1);color:#fff;padding:36px 20px;text-align:center;position:relative}
-header h1{margin:0;font-size:2rem}header p{margin:6px 0 0;opacity:0.95}
-.cart-btn{position:absolute;right:18px;top:18px;background:rgba(255,255,255,0.12);border:0;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer}
-main{max-width:1100px;margin:20px auto;padding:0 18px}
-section{background:var(--card);border-radius:12px;padding:22px;margin-bottom:18px;box-shadow:0 10px 30px rgba(5,15,30,0.04)}
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
-.product{background:linear-gradient(180deg,#fff,#fbfdff);border-radius:12px;padding:14px;text-align:center;transition:transform .22s,box-shadow .22s}
-.product:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(9,30,64,0.08)}
-.product img{width:100%;height:160px;object-fit:cover;border-radius:8px;transition:transform .3s}
-.price{font-weight:700;color:var(--accent);margin-bottom:8px}
-.qty-row input{width:60px;padding:8px;border-radius:8px;border:1px solid #d7dbe6;text-align:center}
-.add{background:var(--brand);color:#fff;border:0;padding:10px 14px;border-radius:10px;cursor:pointer}
-#cartPanel{position:fixed;right:-520px;top:0;height:100vh;width:480px;background:#fff;border-left:1px solid #edf0f6;box-shadow:-20px 0 40px rgba(8,20,40,0.08);transition:right .34s;z-index:1200;padding:18px;overflow:auto}
-#cartPanel.open{right:0}
-.cart-row{display:flex;gap:10px;align-items:center;border:1px solid #f1f4f9;padding:10px;border-radius:8px;margin-bottom:10px}
-.cart-row img{width:64px;height:64px;object-fit:cover;border-radius:6px}
-.checkout-btn{width:100%;background:var(--brand);color:#fff;border:0;padding:10px;border-radius:10px;cursor:pointer;margin-top:10px}
-.small{font-size:0.9rem;color:#445872}
-.footer{text-align:center;padding:18px;color:#5b6b7f;font-size:0.95rem}
-.chat-bubble{position:fixed;right:18px;bottom:18px;width:62px;height:62px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1300;box-shadow:0 10px 30px rgba(3,25,64,0.18)}
-.chat-window{position:fixed;right:92px;bottom:20px;width:340px;max-height:480px;background:#fff;border:2px solid var(--brand);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;z-index:1300;box-shadow:0 18px 50px rgba(11,40,80,0.12)}
-.chat-header{background:linear-gradient(90deg,var(--brand),#0b4aa1);color:#fff;padding:10px;display:flex;align-items:center;justify-content:space-between}
-.chat-body{padding:10px;flex:1;overflow:auto;background:#f7fbff}
-.chat-input{display:flex;border-top:1px solid #e6eefb}
-.chat-input input{flex:1;padding:10px;border:0;outline:none}
-.chat-input button{background:var(--brand);color:#fff;border:0;padding:10px;cursor:pointer}
-.msg{margin-bottom:8px}
-.msg.me{text-align:right}
-.msg .bubble{display:inline-block;padding:8px 12px;border-radius:10px;background:#fff;border:1px solid #e5eefb}
-.msg.me .bubble{background:linear-gradient(90deg,var(--brand),var(--accent));color:#fff;border:0}
-.modal-backdrop{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:1400}
-.modal{background:#fff;padding:18px;border-radius:10px;max-width:480px;width:92%}
-.btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
-.cancel-btn{background:#f3f5f8}
-#siteNotifications{margin-top:8px}
-.notification-card{border:1px solid #e6f0ff;background:#fbfdff;padding:8px;border-radius:8px;margin-bottom:8px}
-.notification-card.error{background:#fff5f5;border-color:#ffe3e3}
-@media(max-width:900px){#cartPanel{width:92%}.chat-window{right:16px;bottom:92px;width:92%}.chat-bubble{right:18px;bottom:18px}}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BuildSmart PH — Store</title>
+  <style>
+    :root {
+      --bg:#f7fafc; --card:#ffffff; --accent:#0ea5a4; --muted:#64748b;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:#0f172a;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);-webkit-font-smoothing:antialiased}
+    header{background:#0f172a;color:#fff;padding:18px 0}
+    .wrap{max-width:1100px;margin:20px auto;padding:12px}
+    .layout{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
+    h1,h2,h3{margin:0 0 8px 0}
+    /* product grid (card style) */
+    .products{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .product-card{background:var(--card);border-radius:12px;padding:12px;border:1px solid rgba(2,6,23,0.06);box-shadow:0 6px 18px rgba(2,6,23,0.03);display:flex;flex-direction:column;transition:transform .14s ease, box-shadow .14s ease}
+    .product-card:hover{transform:translateY(-6px);box-shadow:0 20px 30px rgba(2,6,23,0.06)}
+    .product-card img{width:100%;height:180px;object-fit:cover;border-radius:8px}
+    .product-meta{margin-top:10px;display:flex;justify-content:space-between;align-items:center}
+    .product-meta .title{font-weight:600}
+    .product-meta .price{font-weight:700}
+    .desc{color:#475569;font-size:0.95rem;margin-top:6px}
+    .row{display:flex;gap:8px;align-items:center}
+    .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600}
+    .btn.secondary{background:#64748b}
+    .small{font-size:0.95rem;color:#334155}
+    /* cart panel */
+    aside.card{background:var(--card);border-radius:12px;padding:14px;border:1px solid rgba(2,6,23,0.06)}
+    .cart-list{max-height:360px;overflow:auto;margin-top:8px}
+    .cart-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed #edf2f7}
+    .qty{display:inline-block;padding:4px 8px;border-radius:6px;background:#f1f5f9}
+    input,textarea,select{padding:8px;border-radius:8px;border:1px solid #e2e8f0;width:100%;box-sizing:border-box;font-size:0.95rem}
+    .modal{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(2,6,23,0.6);display:flex;align-items:center;justify-content:center;z-index:60}
+    .modal .box{background:#fff;padding:18px;border-radius:10px;max-width:520px;width:94%}
+    #siteNotifications{margin-top:8px}
+    footer{padding:22px;text-align:center;color:#475569;margin-top:18px}
+    @media (max-width:900px){
+      .layout{grid-template-columns:1fr; padding-bottom:40px}
+      .products{grid-template-columns:1fr}
+    }
+  </style>
 </head>
 <body>
-<header>
-  <div class="container">
-    <h1>BuildSmart PH</h1>
-    <p>Smart and sustainable civil engineering solutions — serving students and professionals across the Philippines.</p>
-  </div>
-  <button class="cart-btn" onclick="toggleCart(true)">🛒 Cart</button>
-</header>
-<main>
-  <section>
-    <h2>About Us</h2>
-    <div style="display:flex;gap:16px;align-items:center">
-      <img src="assets/company.jpg" alt="company" style="width:140px;height:100px;object-fit:cover;border-radius:8px">
-      <div>
-        <p><strong>BuildSmart PH</strong> is a Filipino startup dedicated to improving the construction industry through smart, sustainable, and accessible civil engineering solutions.</p>
-        <p class="small">Mission: Provide affordable, innovative engineering products that make construction safer, more efficient, and environmentally friendly.</p>
+  <header>
+    <div class="wrap">
+      <h1 style="font-size:1.25rem">BuildSmart PH — Store</h1>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="layout">
+      <!-- Product area -->
+      <section>
+        <h2>Products</h2>
+        <div class="products" id="productList">
+          <!-- JS will populate product cards. Replace image src with your images in /images/ or use full URLs -->
+        </div>
+      </section>
+
+      <!-- Cart Panel -->
+      <aside id="cartPanel" class="card">
+        <h3>Your Cart</h3>
+
+        <!-- notifications area -->
+        <div id="siteNotifications" style="margin-top:8px"></div>
+
+        <div id="cartContents" class="cart-list small"></div>
+
+        <div style="margin-top:10px;display:flex;gap:8px">
+          <div style="flex:1">
+            <label class="small">Voucher (₱)</label>
+            <input id="voucher" placeholder="0" value="0" />
+          </div>
+          <div style="width:120px">
+            <label class="small">Shipping (₱)</label>
+            <input id="shipping" type="number" value="0" />
+          </div>
+        </div>
+
+        <div style="margin-top:10px">
+          <label class="small">Payment method</label>
+          <select id="paymentMethod">
+            <option>GCash</option>
+            <option>Bank Transfer</option>
+            <option>Cash on Delivery</option>
+          </select>
+        </div>
+
+        <hr style="margin:12px 0">
+
+        <div>
+          <label class="small">Buyer name</label>
+          <input id="buyerName" placeholder="Full name" />
+          <label class="small" style="margin-top:8px">Buyer email</label>
+          <input id="buyerEmail" placeholder="you@example.com" />
+          <label class="small" style="margin-top:8px">Address</label>
+          <input id="buyerAddress" placeholder="Delivery address" />
+          <label class="small" style="margin-top:8px">Phone</label>
+          <input id="buyerPhone" placeholder="09xxxxxxxxx" />
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn" onclick="checkout()">Checkout</button>
+          <button class="btn secondary" onclick="toggleCart(false)">Hide</button>
+        </div>
+
+        <div id="orderActionsArea" style="margin-top:12px"></div>
+
+        <div style="margin-top:12px;font-size:0.9rem;color:#475569">
+          <small>Tip: replace product image placeholders in the product objects or in the /images/ folder with your own images.</small>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Refund modal -->
+  <div id="modal" style="display:none" class="modal">
+    <div class="box">
+      <h3 id="modalTitle">Request Refund</h3>
+      <div id="modalBody">
+        <label class="small">Reason</label>
+        <textarea id="refundReason" rows="4" placeholder="Describe the problem..."></textarea>
+        <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end">
+          <button class="btn" onclick="submitRefund()">Send Refund Request</button>
+          <button class="btn secondary" onclick="closeModal()">Cancel</button>
+        </div>
       </div>
     </div>
-  </section>
-  <section id="products">
-    <h2>Products</h2>
-    <div class="products">
-
-      <div class="product">
-        <img src="https://share.google/images/eCJU22VSmz63yInMG" alt="BuildMate™">
-        <h3>BuildMate™</h3>
-        <p>Smart construction tool for engineers and students.</p>
-        <div class="price">₱1999</div>
-        <div class="qty-row"><input type="number" id="qty-buildmate" value="1" min="1"></div>
-        <button class="add" onclick="addToCart('BuildMate™',parseInt(document.getElementById('qty-buildmate').value),1999,'https://share.google/images/eCJU22VSmz63yInMG')">Add to Cart</button>
-      </div>
-    
-      <div class="product">
-        <img src="https://share.google/images/Bqsh7THPW7PHW0hs7" alt="EcoBricks+">
-        <h3>EcoBricks+</h3>
-        <p>Sustainable, recyclable bricks for green building.</p>
-        <div class="price">₱799</div>
-        <div class="qty-row"><input type="number" id="qty-ecobricks" value="1" min="1"></div>
-        <button class="add" onclick="addToCart('EcoBricks+',parseInt(document.getElementById('qty-ecobricks').value),799,'https://share.google/images/Bqsh7THPW7PHW0hs7')">Add to Cart</button>
-      </div>
-    
-      <div class="product">
-        <img src="https://share.google/images/L70coW7WSmmdnOXr5" alt="HydroShield™">
-        <h3>HydroShield™</h3>
-        <p>Advanced water-resistant construction coating.</p>
-        <div class="price">₱1499</div>
-        <div class="qty-row"><input type="number" id="qty-hydroshield" value="1" min="1"></div>
-        <button class="add" onclick="addToCart('HydroShield™',parseInt(document.getElementById('qty-hydroshield').value),1499,'https://share.google/images/L70coW7WSmmdnOXr5')">Add to Cart</button>
-      </div>
-    
-      <div class="product">
-        <img src="assets/magnagel.jpg" alt="MagnaGel Isolator">
-        <h3>MagnaGel Isolator</h3>
-        <p>Earthquake-resisting rubber bearing system for safer structures.</p>
-        <div class="price">₱3499</div>
-        <div class="qty-row"><input type="number" id="qty-magnagel" value="1" min="1"></div>
-        <button class="add" onclick="addToCart('MagnaGel Isolator',parseInt(document.getElementById('qty-magnagel').value),3499,'assets/magnagel.jpg')">Add to Cart</button>
-      </div>
-    
-      <div class="product">
-        <img src="https://share.google/A14fGzIjkYyPoAlVH" alt="ThermaSeal™">
-        <h3>ThermaSeal™</h3>
-        <p>Heat-insulating roofing solution to reduce building temperature.</p>
-        <div class="price">₱2199</div>
-        <div class="qty-row"><input type="number" id="qty-thermaseal" value="1" min="1"></div>
-        <button class="add" onclick="addToCart('ThermaSeal™',parseInt(document.getElementById('qty-thermaseal').value),2199,'https://share.google/A14fGzIjkYyPoAlVH')">Add to Cart</button>
-      </div>
-    
-      <div class="product">
-        <img src="https://share.google/qWwNVcmtpIsYdcpee" alt="AquaFlow System™">
-        <h3>AquaFlow System™</h3>
-        <p>Eco-friendly drainage & water recycling kit.</p>
-        <div class="price">₱4499</div>
-        <div class="qty-row"><input type="number" id="qty-aquaflow" value="1" min="1"></div>
-        <button class="add" onclick="addToCart('AquaFlow System™',parseInt(document.getElementById('qty-aquaflow').value),4499,'https://share.google/qWwNVcmtpIsYdcpee')">Add to Cart</button>
-      </div>
-    
-      <div class="product">
-        <img src="assets/steelsmart.jpg" alt="SteelSmart Connectors™">
-        <h3>SteelSmart Connectors™</h3>
-        <p>Modular steel joint system for fast assembly.</p>
-        <div class="price">₱2799</div>
-        <div class="qty-row"><input type="number" id="qty-steelsmart" value="1" min="1"></div>
-        <button class="add" onclick="addToCart('SteelSmart Connectors™',parseInt(document.getElementById('qty-steelsmart').value),2799,'assets/steelsmart.jpg')">Add to Cart</button>
-      </div>
-    
-      <div class="product">
-        <img src="assets/smartmix.jpg" alt="SmartMix Additive™">
-        <h3>SmartMix Additive™</h3>
-        <p>Chemical admixture for stronger, faster-curing concrete.</p>
-        <div class="price">₱1099</div>
-        <div class="qty-row"><input type="number" id="qty-smartmix" value="1" min="1"></div>
-        <button class="add" onclick="addToCart('SmartMix Additive™',parseInt(document.getElementById('qty-smartmix').value),1099,'assets/smartmix.jpg')">Add to Cart</button>
-      </div>
-    
-    </div>
-  </section>
-
-  <section>
-    <h2>Customer Care</h2>
-    <p class="small">Refunds: Customers may request a refund within <strong>7 days</strong> of receiving their order if the product is defective, damaged, or incorrect. Proof of purchase is required.</p>
-    <p class="small">Cancellations: Orders can be canceled before shipment. Once shipped, orders cannot be canceled. For help email <a href="mailto:lacsimarrainier24@gmail.com">lacsimarrainier24@gmail.com</a>.</p>
-  </section>
-</main>
-
-<div id="cartPanel" aria-hidden="true">
-  <h3>Your Cart</h3>
-
-  <!-- Notifications area (on-site notifications) -->
-  <div id="siteNotifications"></div>
-
-  <div id="cartItems" class="cart-items"></div>
-
-  <div class="small-label">Voucher code</div>
-  <input type="text" id="voucher" placeholder="Enter voucher code (DISCOUNT50)">
-  <div style="margin-top:10px" class="small-label">Shipping option</div>
-  <select id="shipping" onchange="updateCartSummary()">
-    <option value="0">Standard (Free)</option>
-    <option value="100">Express (₱100)</option>
-    <option value="50">Store Pickup (₱50)</option>
-  </select>
-
-  <div style="margin-top:10px" class="small-label">Payment method</div>
-  <select id="paymentMethod">
-    <option value="Credit Card">Credit Card</option>
-    <option value="GCash">GCash</option>
-    <option value="PayPal">PayPal</option>
-    <option value="COD">Cash on Delivery</option>
-  </select>
-
-  <div class="buyer-fields">
-    <div class="small-label">Name</div>
-    <input type="text" id="buyerName" placeholder="Full name">
-    <div class="small-label">Email</div>
-    <input type="email" id="buyerEmail" placeholder="you@example.com">
-    <div class="small-label">Address</div>
-    <input type="text" id="buyerAddress" placeholder="Address, City, ZIP">
-    <div class="small-label">Phone</div>
-    <input type="text" id="buyerPhone" placeholder="09XXXXXXXXX">
   </div>
 
-  <div class="summary" id="checkoutSummary"></div>
-
-  <button class="checkout-btn" onclick="checkout()">Checkout & Send Receipt</button>
-  <button class="btn cancel-btn" style="width:100%;margin-top:8px" onclick="cancelOrder()">Cancel Order</button>
-
-  <form id="sellerForm" action="https://formsubmit.co/lacsimarrainier24@gmail.com" method="POST" target="_blank" style="display:none;">
-    <input type="hidden" name="_subject" value="🛒 New BuildSmart PH Order Received">
-    <input type="hidden" name="orderDetails" id="sellerOrderDetails">
-    <input type="hidden" name="customerName" id="sellerCustomerName">
-    <input type="hidden" name="customerEmail" id="sellerCustomerEmail">
+  <!-- Hidden FormSubmit forms -->
+  <form id="sellerForm" action="https://formsubmit.co/lacsimarrainier24@gmail.com" method="POST" style="display:none">
+    <input type="hidden" name="sellerOrderDetails" id="sellerOrderDetails" />
+    <input type="hidden" name="sellerCustomerName" id="sellerCustomerName" />
+    <input type="hidden" name="sellerCustomerEmail" id="sellerCustomerEmail" />
   </form>
 
-  <form id="buyerForm" action="" method="POST" target="_blank" style="display:none;">
-    <input type="hidden" name="_subject" value="Your BuildSmart PH Order Confirmation">
-    <input type="hidden" name="orderDetails" id="buyerOrderDetails">
-    <input type="hidden" name="customerName" id="buyerCustomerName">
+  <form id="buyerForm" action="" method="POST" style="display:none">
+    <input type="hidden" name="buyerOrderDetails" id="buyerOrderDetails" />
+    <input type="hidden" name="buyerCustomerName" id="buyerCustomerName" />
   </form>
-</div>
 
-<!-- Modal for refund request -->
-<div class="modal-backdrop" id="modalBackdrop">
-  <div class="modal" id="modal">
-    <h3 id="modalTitle">Request Refund</h3>
-    <p id="modalText">Tell us what's wrong and we'll respond via email.</p>
-    <textarea id="refundReason" rows="4" style="width:100%;padding:10px;border-radius:8px;border:1px solid #e7eefb"></textarea>
-    <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
-      <button class="btn cancel-btn" onclick="closeModal()">Close</button>
-      <button class="btn" style="background:var(--brand);color:#fff" onclick="submitRefund()">Submit Refund Request</button>
-    </div>
-  </div>
-</div>
+  <footer>
+    BuildSmart PH • Simple e-store demo — replace images and tweak text as needed.
+  </footer>
 
-<!-- Chat UI -->
-<div class="chat-bubble" id="chatBubble" title="Chat with BuildSmart" onclick="openChat()">💬</div>
-<div class="chat-window" id="chatWindow" style="display:none">
-  <div class="chat-header"><strong>BuildSmart Assistant</strong><div><button class="chat-close" onclick="closeChat()">✖</button></div></div>
-  <div class="chat-body" id="chatBody"></div>
-  <div style="padding:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-    <button class="btn" onclick="quick('shipping')">Shipping Options</button>
-    <button class="btn" onclick="quick('payment')">Payment Methods</button>
-    <button class="btn" onclick="quick('refund')">Refund Policy</button>
-    <button class="btn" onclick="quick('cancel')">How to Cancel</button>
-  </div>
-  <div class="chat-input">
-    <input id="chatInput" placeholder="Ask about products, refund, or say 'add BuildMate to cart'">
-    <button onclick="handleChat()">Send</button>
-  </div>
-</div>
+  <script>
+    /* ---------------------------
+       Product catalog (edit these)
+       Replace img paths with your images (e.g. /images/drill.jpg)
+       --------------------------- */
+    const products = [
+      { id:'P001', title:'Cordless Drill', price:2499, img:'images/drill.jpg', desc:'18V cordless drill' },
+      { id:'P002', title:'Safety Helmet', price:399, img:'images/helmet.jpg', desc:'Construction safety helmet' },
+      { id:'P003', title:'Measuring Tape', price:149, img:'images/tape.jpg', desc:'5m measuring tape' },
+      { id:'P004', title:'Work Gloves', price:199, img:'images/gloves.jpg', desc:'Durable work gloves' }
+    ];
 
-<footer class="footer">
-  <div>University of Luzon • TECH-1 • Rainier Ramiscal</div>
-  <div style="margin-top:6px"><a href="#refund">Refund &amp; Cancellation Policy</a> • <a href="mailto:lacsimarrainier24@gmail.com">Contact</a></div>
-</footer>
+    // cart and state
+    let cart = {}; // { productId: { ...product, qty } }
+    let voucherDiscount = 0;
+    let lastOrderDetails = null; // { id, details, name, email, total, status }
 
-<script>
-/* ===========================
-   Store state and utilities
-   =========================== */
-let cart = {};
-let voucherDiscount = 0;
-
-// lastOrderDetails now includes id and status
-// { id, details, name, email, total, status }
-let lastOrderDetails = null;
-
-/* ---------- Notifications (on-site) ---------- */
-function pushSiteNotification(title, text, type = 'info') {
-  const container = document.getElementById('siteNotifications');
-  if(!container) return;
-  const note = document.createElement('div');
-  note.className = 'notification-card' + (type === 'error' ? ' error' : '');
-  note.innerHTML = `<strong>${escapeHtml(title)}</strong><div style="font-size:0.95rem;color:#445872;margin-top:6px">${escapeHtml(text)}</div>`;
-  container.prepend(note);
-  // auto-dismiss after 12s
-  setTimeout(()=>{ if(note.parentNode) note.parentNode.removeChild(note); }, 12000);
-}
-
-/* ---------- Cart functions (unchanged behavior) ---------- */
-function addToCart(name, qty, price, img){
-  qty = parseInt(qty)||1;
-  if(cart[name]) cart[name].qty += qty;
-  else cart[name] = {qty: qty, price: price, img: img};
-  renderCart();
-  toggleCart(true);
-}
-
-function renderCart(){
-  const container = document.getElementById('cartItems');
-  container.innerHTML = '';
-  for(const [name,item] of Object.entries(cart)){
-    const row = document.createElement('div');
-    row.className = 'cart-row';
-    row.innerHTML = `<img src="${item.img}" alt="${escapeHtml(name)}"><div style="flex:1"><strong>${escapeHtml(name)}</strong><div class="small">₱${item.price.toLocaleString()}</div></div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-        <div><input type="number" min="1" value="${item.qty}" onchange="updateQty('${escapeJS(name)}',this.value)"></div>
-        <div><button class="btn cancel-btn" onclick="removeItem('${escapeJS(name)}')">Remove</button></div>
-      </div>`;
-    container.appendChild(row);
-  }
-  updateCartSummary();
-}
-
-function updateQty(name, qty){ qty = parseInt(qty)||1; if(cart[name]) cart[name].qty = qty; updateCartSummary(); }
-function removeItem(name){ delete cart[name]; renderCart(); }
-function toggleCart(open){ const panel = document.getElementById('cartPanel'); if(open===true) panel.classList.add('open'); else if(open===false) panel.classList.remove('open'); else panel.classList.toggle('open'); }
-function applyVoucher(){ const code = (document.getElementById('voucher').value||'').trim().toUpperCase(); if(code==='DISCOUNT50'){ voucherDiscount = 50; pushSiteNotification('Voucher Applied', '₱50 discount applied to your order.', 'info'); } else { voucherDiscount = 0; pushSiteNotification('Voucher Invalid', 'The voucher code is not recognized.', 'error'); } updateCartSummary(); }
-function updateCartSummary(){ let subtotal = 0; for(const item of Object.values(cart)) subtotal += item.qty * item.price; const shipping = parseInt(document.getElementById('shipping').value||'0'); const total = Math.max(0, subtotal + shipping - voucherDiscount); document.getElementById('checkoutSummary').innerHTML = `<div style="display:flex;justify-content:space-between"><span>Subtotal</span><span>₱${subtotal.toLocaleString()}</span></div><div style="display:flex;justify-content:space-between"><span>Shipping</span><span>₱${shipping.toLocaleString()}</span></div><div style="display:flex;justify-content:space-between"><span>Discount</span><span>-₱${voucherDiscount}</span></div><hr style="border:none;border-top:1px solid #eef6ff;margin:8px 0"><div style="display:flex;justify-content:space-between;font-weight:800;color:var(--brand)"><span>Total</span><span>₱${total.toLocaleString()}</span></div>`; }
-
-/* ---------- Checkout + Order result (updated) ---------- */
-function checkout(){
-  if(Object.keys(cart).length === 0){ alert('Cart is empty'); return; }
-  const name = document.getElementById('buyerName').value.trim();
-  const email = document.getElementById('buyerEmail').value.trim();
-  const address = document.getElementById('buyerAddress').value.trim();
-  const phone = document.getElementById('buyerPhone').value.trim();
-  if(!name || !email || !address || !phone){ alert('Please fill name, email, address, and phone'); return; }
-
-  let subtotal = 0;
-  let details = 'BuildSmart PH — E-Receipt\n\n';
-  details += `Customer: ${name}\nEmail: ${email}\nPhone: ${phone}\nAddress: ${address}\n\nItems:\n`;
-  for(const [k,item] of Object.entries(cart)){
-    const line = item.qty * item.price;
-    subtotal += line;
-    details += `${k} x${item.qty} — ₱${line.toLocaleString()}\n`;
-  }
-  const shipping = parseInt(document.getElementById('shipping').value||'0');
-  const paymentMethod = document.getElementById('paymentMethod').value;
-  const total = Math.max(0, subtotal + shipping - voucherDiscount);
-  details += `\nSubtotal: ₱${subtotal.toLocaleString()}\nShipping: ₱${shipping.toLocaleString()}\nDiscount: ₱${voucherDiscount}\nTotal: ₱${total.toLocaleString()}\nPayment: ${paymentMethod}\n`;
-
-  const confirmed = confirm('Confirm order? OK to submit and email receipt. Cancel to review order.');
-  if(!confirmed) return;
-
-  // assign an order id (timestamp) and pending status
-  const id = 'ORD-' + Date.now();
-  lastOrderDetails = { id, details, name, email, total, status: 'pending' };
-
-  // send seller email (FormSubmit)
-  document.getElementById('sellerOrderDetails').value = `Order ID: ${id}\n\n` + details;
-  document.getElementById('sellerCustomerName').value = name;
-  document.getElementById('sellerCustomerEmail').value = email;
-  try { document.getElementById('sellerForm').submit(); } catch(e){ console.warn('Seller form submit failed:', e); }
-
-  // send buyer email via FormSubmit to buyer's email
-  const buyerForm = document.getElementById('buyerForm');
-  buyerForm.action = 'https://formsubmit.co/' + encodeURIComponent(email);
-  document.getElementById('buyerOrderDetails').value = `Order ID: ${id}\n\n` + details;
-  document.getElementById('buyerCustomerName').value = name;
-  try { buyerForm.submit(); } catch(e){ console.warn('Buyer form submit failed:', e); }
-
-  // UI: confirmation + order result area
-  alert('Order placed! An e-receipt has been emailed to you.');
-  renderOrderResult();
-
-  // onsite notification
-  pushSiteNotification('Order Placed', 'Your order was placed and an e-receipt was emailed to you.', 'info');
-
-  // clear cart & fields
-  cart = {}; voucherDiscount = 0;
-  document.getElementById('voucher').value = '';
-  document.getElementById('buyerName').value=''; document.getElementById('buyerEmail').value=''; document.getElementById('buyerAddress').value=''; document.getElementById('buyerPhone').value='';
-  renderCart(); toggleCart(false);
-}
-
-function renderOrderResult() {
-  const panel = document.getElementById('cartPanel');
-  // Remove existing order result if present
-  const existing = document.getElementById('lastOrderBox');
-  if(existing) existing.remove();
-
-  const node = document.createElement('div');
-  node.id = 'lastOrderBox';
-  node.style.border = '1px solid #e6f0ff';
-  node.style.padding = '10px';
-  node.style.borderRadius = '8px';
-  node.style.marginTop = '8px';
-
-  // status text
-  const statusText = lastOrderDetails && lastOrderDetails.status ? lastOrderDetails.status : 'pending';
-
-  node.innerHTML = `
-    <strong>Order Submitted</strong>
-    <div class="small">Status: <em id="orderStatusText">${escapeHtml(statusText)}</em></div>
-    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-      <button class="btn" onclick="openModal('refund')">Request Refund</button>
-      <button class="btn cancel-btn" onclick="cancelOrderAfterCheckout()">Cancel Order</button>
-      <button class="btn" onclick="viewReceipt()">View Receipt</button>
-    </div>
-  `;
-  // insert near top (after h3)
-  const firstInsert = panel.firstChild && panel.firstChild.nextSibling ? panel.firstChild.nextSibling : panel.firstChild;
-  panel.insertBefore(node, firstInsert);
-
-  // also push a site notification for confirmation
-  pushSiteNotification('Order Submitted', 'You can request a refund or cancel (if not shipped).', 'info');
-}
-
-/* ---------- Cancel after checkout (updated) ---------- */
-function cancelOrderAfterCheckout() {
-  if(!lastOrderDetails) { alert('No recent order to cancel.'); return; }
-  if(lastOrderDetails.status === 'shipped') {
-    alert('This order has already been shipped and cannot be canceled. Please request a refund instead.');
-    return;
-  }
-  if(lastOrderDetails.status === 'cancel_requested') {
-    alert('Cancellation already requested. We will contact you by email.');
-    return;
-  }
-
-  const ok = confirm('Are you sure you want to cancel this order? If the order is not shipped, your cancellation request will be sent to BuildSmart PH support.');
-  if(!ok) return;
-
-  // update status locally
-  lastOrderDetails.status = 'cancel_requested';
-  // update displayed status
-  const el = document.getElementById('orderStatusText'); if(el) el.innerText = lastOrderDetails.status;
-
-  // prepare cancellation message for seller
-  const txt = `CANCELLATION REQUEST\nOrder ID: ${lastOrderDetails.id}\nCustomer: ${lastOrderDetails.name} (${lastOrderDetails.email})\n\nOrder Details:\n${lastOrderDetails.details}\n\nRequest: Customer requests cancellation before shipment.`;
-
-  document.getElementById('sellerOrderDetails').value = txt;
-  document.getElementById('sellerCustomerName').value = lastOrderDetails.name;
-  document.getElementById('sellerCustomerEmail').value = lastOrderDetails.email;
-
-  // submit seller form to notify via email (FormSubmit)
-  try { document.getElementById('sellerForm').submit(); } catch(e){ console.warn('Seller form submit failed:', e); }
-
-  // on-site notification
-  pushSiteNotification('Cancellation Requested', 'Your cancellation request was sent. If the order is not shipped, we will process it and notify you by email.', 'info');
-
-  alert('Cancellation request sent to BuildSmart PH support. If not shipped, we will cancel and refund per policy.');
-}
-
-/* ---------- Refund (updated) ---------- */
-function submitRefund() {
-  const reason = document.getElementById('refundReason').value.trim();
-  if(!reason){ alert('Please describe the issue.'); return; }
-  if(!lastOrderDetails){ alert('No recent order found.'); return; }
-
-  // mark refund request locally
-  lastOrderDetails.status = 'refund_requested';
-  // update displayed status if present
-  const el = document.getElementById('orderStatusText'); if(el) el.innerText = lastOrderDetails.status;
-
-  // create message for seller
-  const txt = `REFUND REQUEST\nOrder ID: ${lastOrderDetails.id}\nCustomer: ${lastOrderDetails.name} (${lastOrderDetails.email})\nReason:\n${reason}\n\nOrder details:\n${lastOrderDetails.details}`;
-
-  document.getElementById('sellerOrderDetails').value = txt;
-  document.getElementById('sellerCustomerName').value = lastOrderDetails.name;
-  document.getElementById('sellerCustomerEmail').value = lastOrderDetails.email;
-
-  try { document.getElementById('sellerForm').submit(); } catch(e) { console.warn('Seller form submit failed:', e); }
-  closeModal();
-
-  // onsite notification to user
-  pushSiteNotification('Refund Request Sent', 'We received your refund request — BuildSmart PH will contact you at your email.', 'info');
-  alert('Refund request sent to BuildSmart PH support. We will contact you via email.');
-}
-
-/* ---------- Other helpers ---------- */
-function viewReceipt(){
-  if(!lastOrderDetails){ alert('No order to view'); return; }
-  // show order id and details
-  alert(`Order ID: ${lastOrderDetails.id}\n\n` + lastOrderDetails.details);
-}
-
-// Simulate marking an order as shipped (for testing only)
-// In real life you would mark shipped server-side; this is purely for demo/testing.
-function simulateShipLastOrder() {
-  if(!lastOrderDetails) { alert('No order to ship'); return; }
-  lastOrderDetails.status = 'shipped';
-  const el = document.getElementById('orderStatusText'); if(el) el.innerText = lastOrderDetails.status;
-  pushSiteNotification('Order Shipped', 'Order has been marked as shipped. Cancellations are no longer allowed.', 'info');
-}
-
-/* ---------- Legacy cancel (clears current cart) ---------- */
-function cancelOrder(){
-  if(Object.keys(cart).length === 0){ alert('Cart is already empty'); return; }
-  const ok = confirm('Are you sure you want to cancel your current order? This will clear the cart.');
-  if(ok){ cart = {}; renderCart(); alert('Order canceled.'); }
-}
-
-/* ---------- Modal controls ---------- */
-function openModal(type){
-  document.getElementById('modalBackdrop').style.display = 'flex';
-  if(type === 'refund'){
-    document.getElementById('modalTitle').innerText = 'Request Refund';
-    document.getElementById('modalText').innerText = 'Please explain the issue and include order email. We will respond via email.';
-  } else {
-    document.getElementById('modalTitle').innerText = 'Contact Support';
-    document.getElementById('modalText').innerText = 'Send us a message and we will respond via email.';
-  }
-}
-
-function closeModal(){ document.getElementById('modalBackdrop').style.display = 'none'; document.getElementById('refundReason').value = ''; }
-
-/* ---------- Utility: escape strings for HTML and JS ---------- */
-function escapeHtml(unsafe) {
-  return String(unsafe).replace(/[&<"'>]/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]; });
-}
-function escapeJS(str){ return String(str).replace(/'/g,"\\'").replace(/"/g,'\\"'); }
-
-/* ===========================
-   Chat assistant (professional tone)
-   =========================== */
-function openChat(){ document.getElementById('chatWindow').style.display='flex'; document.getElementById('chatBubble').style.display='none'; appendChat('bot','Hello. I am the BuildSmart Assistant. I can help with product information, shipping, payment, refunds, and order status. How may I assist you today?'); }
-function closeChat(){ document.getElementById('chatWindow').style.display='none'; document.getElementById('chatBubble').style.display='flex'; }
-function appendChat(who,msg){ const el=document.createElement('div'); el.className='msg '+(who==='me'?'me':''); el.innerHTML=`<div class="bubble">${escapeHtml(msg)}</div>`; document.getElementById('chatBody').appendChild(el); document.getElementById('chatBody').scrollTop=document.getElementById('chatBody').scrollHeight; }
-
-function quick(topic){
-  if(topic==='shipping') appendChat('bot','Shipping options are: Standard (Free), Express (₱100), or Store Pickup (₱50). You may select the preferred option in the cart.');
-  else if(topic==='payment') appendChat('bot','Accepted payment methods: Credit Card, GCash, PayPal, or Cash on Delivery (COD).');
-  else if(topic==='refund') appendChat('bot','Refund policy: Refunds are available within 7 days of receiving the order for defective, damaged, or incorrect items. Use "Request Refund" in the cart to submit a request.');
-  else if(topic==='cancel') appendChat('bot','To cancel an order: Use the Cancel Order button in the cart before shipment. If you already placed an order, use the Cancel Order option in the order section (if present).');
-}
-
-function handleChat(){
-  const raw = document.getElementById('chatInput').value.trim();
-  if(!raw) return;
-  appendChat('me', raw);
-  document.getElementById('chatInput').value = '';
-  const input = raw.toLowerCase();
-
-  // Intent: add to cart (e.g., "add buildmate to cart", "buy hydroshield")
-  if(input.match(/\b(add|buy|purchase)\b/)){
-    for(const key of Object.keys(productInfo)){
-      // match product key or product name fragment
-      if(input.includes(key) || input.includes(productInfo[key].name.split(' ')[0].toLowerCase())){
-        const prod = productInfo[key];
-        addToCart(prod.name, 1, parseInt(prod.price.replace(/₱|,/g,'')), prod.img || `assets/${key}.jpg`);
-        appendChat('bot', `Added 1 × ${prod.name} to your cart. You may open the cart to checkout.`);
-        return;
+    /* Render product cards (card-style) */
+    function renderProducts(){
+      const container = document.getElementById('productList');
+      container.innerHTML = '';
+      for(const p of products){
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div style="position:relative">
+            <img src="${p.img}" alt="${p.title}" onerror="this.style.opacity=0.5; this.nextElementSibling.style.display='block'">
+            <div style="display:none;color:#94a3b8;font-size:0.9rem;margin-top:8px">Replace this image: ${p.img}</div>
+          </div>
+          <div style="margin-top:10px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="title">${p.title}</div>
+              <div class="price">₱${p.price.toLocaleString()}</div>
+            </div>
+            <div class="desc">${p.desc}</div>
+            <div style="display:flex;justify-content:flex-end;margin-top:10px">
+              <button class="btn" onclick="addToCart('${p.id}')">Add to cart</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
       }
     }
-    appendChat('bot','Which product would you like to add? Available items: BuildMate, EcoBricks, HydroShield, MagnaGel, ThermaSeal, AquaFlow, SteelSmart, SmartMix.');
-    return;
-  }
 
-  // Intent: refund
-  if(input.includes('refund')){
-    if(!lastOrderDetails){ appendChat('bot','I do not see a recent order in our session. If you have placed an order, please provide the Order ID or open your cart to request a refund.'); return; }
-    openModal('refund');
-    appendChat('bot','I have opened the refund dialog. Please describe the issue and submit; we will email you confirmation.');
-    return;
-  }
-
-  // Intent: cancel order (after checkout)
-  if(input.includes('cancel order') || input === 'cancel'){
-    if(!lastOrderDetails){ appendChat('bot','There is no recent order recorded in this session. If you need to clear your current cart, press Cancel Order in the cart.'); return; }
-    // If order exists, explain status
-    if(lastOrderDetails.status === 'shipped'){ appendChat('bot','Your last order is already marked as shipped and cannot be canceled. You may submit a refund request instead.'); return; }
-    // proceed to request cancellation
-    cancelOrderAfterCheckout();
-    appendChat('bot','Cancellation request submitted to BuildSmart support. We will contact you via email with confirmation.');
-    return;
-  }
-
-  // Intent: order status
-  if(input.includes('status') || input.includes('order status') || input.includes('my order')){
-    if(!lastOrderDetails){ appendChat('bot','I do not have a recent order recorded. If you have an Order ID, please share it.'); return; }
-    appendChat('bot', `Order ID: ${lastOrderDetails.id}. Current status: ${lastOrderDetails.status}. We will notify you at ${lastOrderDetails.email} regarding any updates.`);
-    return;
-  }
-
-  // Intent: view receipt
-  if(input.includes('receipt') || input.includes('view receipt')){
-    if(!lastOrderDetails){ appendChat('bot','No order found to view.'); return; }
-    appendChat('bot', `Opening receipt for Order ID: ${lastOrderDetails.id}.`); viewReceipt(); return;
-  }
-
-  // Intent: shipping/payment/refund quick words
-  if(input.includes('shipping')){ appendChat('bot','Shipping: Standard (Free), Express (₱100), Store Pickup (₱50).'); return; }
-  if(input.includes('payment')){ appendChat('bot','Payment methods: Credit Card, GCash, PayPal, COD.'); return; }
-
-  // Product info query
-  for(const k of Object.keys(productInfo)){
-    if(input.includes(k) || input.includes(productInfo[k].name.split(' ')[0].toLowerCase())){
-      const p = productInfo[k];
-      appendChat('bot', `${p.name} — ${p.desc} Price: ${p.price}.`);
-      return;
+    /* Cart functions */
+    function addToCart(pid){
+      const prod = products.find(x => x.id===pid);
+      if(!prod) return;
+      if(!cart[pid]) cart[pid] = { ...prod, qty:0 };
+      cart[pid].qty += 1;
+      renderCart();
+      pushSiteNotification('Added to cart', `${prod.title} x${cart[pid].qty}`);
     }
-  }
+    function removeFromCart(pid){
+      if(!cart[pid]) return;
+      cart[pid].qty -= 1;
+      if(cart[pid].qty <= 0) delete cart[pid];
+      renderCart();
+    }
 
-  // Fallback
-  appendChat('bot','I\'m sorry — I did not understand that. You can say: "Add BuildMate to cart", "Cancel order", "Request refund", "Order status", or ask about shipping/payment.');
-}
+    function renderCart(){
+      const el = document.getElementById('cartContents');
+      el.innerHTML = '';
+      let subtotal = 0;
+      for(const [k,item] of Object.entries(cart)){
+        const row = document.createElement('div');
+        row.className = 'cart-row';
+        row.innerHTML = `
+          <div style="flex:1">
+            <strong>${item.title}</strong>
+            <div class="small">₱${item.price.toLocaleString()} • <span class="qty">x${item.qty}</span></div>
+          </div>
+          <div style="text-align:right">
+            <div>₱${(item.price*item.qty).toLocaleString()}</div>
+            <div style="margin-top:6px;display:flex;gap:6px;justify-content:flex-end">
+              <button class="btn secondary" onclick="removeFromCart('${k}')">-</button>
+              <button class="btn" onclick="addToCart('${k}')">+</button>
+            </div>
+          </div>
+        `;
+        el.appendChild(row);
+        subtotal += item.price * item.qty;
+      }
 
-/* ---------- Product catalog information (for chat matching) ---------- */
-const productInfo = {
-  buildmate: { name: 'BuildMate™', price: '₱1999', desc: 'Smart construction tool for engineers and students.', img: 'https://share.google/images/eCJU22VSmz63yInMG' },
-  ecobricks: { name: 'EcoBricks+', price: '₱799', desc: 'Sustainable, recyclable bricks for green building.', img: 'https://share.google/images/Bqsh7THPW7PHW0hs7' },
-  hydroshield: { name: 'HydroShield™', price: '₱1499', desc: 'Advanced water-resistant construction coating.', img: 'https://share.google/images/L70coW7WSmmdnOXr5' },
-  magnagel: { name: 'MagnaGel Isolator', price: '₱3499', desc: 'Earthquake-resisting rubber bearing system for safer structures.', img: 'assets/magnagel.jpg' },
-  thermaseal: { name: 'ThermaSeal™', price: '₱2199', desc: 'Heat-insulating roofing solution to reduce building temperature.', img: 'https://share.google/A14fGzIjkYyPoAlVH' },
-  aquaflow: { name: 'AquaFlow System™', price: '₱4499', desc: 'Eco-friendly drainage & water recycling kit.', img: 'https://share.google/qWwNVcmtpIsYdcpee' },
-  steelsmart: { name: 'SteelSmart Connectors™', price: '₱2799', desc: 'Modular steel joint system for fast assembly.', img: 'assets/steelsmart.jpg' },
-  smartmix: { name: 'SmartMix Additive™', price: '₱1099', desc: 'Chemical admixture for stronger, faster-curing concrete.', img: 'assets/smartmix.jpg' },
-};
+      const summary = document.createElement('div');
+      summary.style.marginTop = '8px';
+      const ship = parseInt(document.getElementById('shipping').value || '0');
+      const voucher = parseInt(document.getElementById('voucher').value || '0');
+      const total = Math.max(0, subtotal + ship - (voucher || 0));
+      summary.innerHTML = `<div class="small">Subtotal: ₱${subtotal.toLocaleString()}</div><div class="small">Shipping: ₱${ship.toLocaleString()}</div><div class="small">Discount: ₱${voucher || 0}</div><hr><strong>Total: ₱${total.toLocaleString()}</strong>`;
+      el.appendChild(summary);
+    }
 
-/* Initial assistant welcome */
-appendChat('bot','Hello — I am BuildSmart assistant. Click a suggestion or type a question.');
+    /* Small on-site notifications area */
+    function pushSiteNotification(title, text, type = 'info') {
+      const container = document.getElementById('siteNotifications');
+      const note = document.createElement('div');
+      note.style.border = '1px solid #e6f0ff';
+      note.style.background = (type==='error' ? '#fff5f5' : '#fbfdff');
+      note.style.padding = '8px';
+      note.style.borderRadius = '8px';
+      note.style.marginBottom = '8px';
+      note.innerHTML = `<strong>${title}</strong><div style="font-size:0.95rem;color:#445872;margin-top:6px">${text}</div>`;
+      container.prepend(note);
+      setTimeout(()=>{ if(note.parentNode) note.parentNode.removeChild(note); }, 12000);
+    }
 
-/* End of script */
-</script>
+    /* Order/result area after checkout */
+    function renderOrderResult() {
+      const actionsArea = document.getElementById('orderActionsArea');
+      actionsArea.innerHTML = ''; // clear
+
+      const node = document.createElement('div');
+      node.id = 'lastOrderBox';
+      node.style.border = '1px solid #e6f0ff';
+      node.style.padding = '10px';
+      node.style.borderRadius = '8px';
+      node.style.marginTop = '8px';
+
+      const statusText = lastOrderDetails && lastOrderDetails.status ? lastOrderDetails.status : 'pending';
+
+      node.innerHTML = `
+        <strong>Order Submitted</strong>
+        <div class="small">Status: <em id="orderStatusText">${statusText}</em></div>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+          <button class="btn" onclick="openModal('refund')">Request Refund</button>
+          <button class="btn cancel-btn" onclick="cancelOrderAfterCheckout()">Cancel Order</button>
+          <button class="btn" onclick="viewReceipt()">View Receipt</button>
+        </div>
+      `;
+      actionsArea.appendChild(node);
+      pushSiteNotification('Order Placed', 'Your order was placed and an e-receipt was emailed to you.', 'info');
+    }
+
+    /* Cancel after checkout */
+    function cancelOrderAfterCheckout() {
+      if(!lastOrderDetails) { alert('No recent order to cancel.'); return; }
+      if(lastOrderDetails.status === 'shipped') {
+        alert('This order has already been shipped and cannot be canceled. Please request a refund instead.');
+        return;
+      }
+      if(lastOrderDetails.status === 'cancel_requested') {
+        alert('Cancellation already requested. We will contact you by email.');
+        return;
+      }
+
+      const ok = confirm('Are you sure you want to cancel this order? If the order is not shipped, your cancellation request will be sent to BuildSmart PH support.');
+      if(!ok) return;
+
+      lastOrderDetails.status = 'cancel_requested';
+      const el = document.getElementById('orderStatusText'); if(el) el.innerText = lastOrderDetails.status;
+
+      const txt = `CANCELLATION REQUEST\nCustomer: ${lastOrderDetails.name} (${lastOrderDetails.email})\n\nOrder Details:\n${lastOrderDetails.details}\n\nRequest: Customer requests cancellation before shipment.`;
+
+      document.getElementById('sellerOrderDetails').value = txt;
+      document.getElementById('sellerCustomerName').value = lastOrderDetails.name;
+      document.getElementById('sellerCustomerEmail').value = lastOrderDetails.email;
+
+      try { document.getElementById('sellerForm').submit(); } catch(e){ console.warn('Seller form submit failed:', e); }
+
+      pushSiteNotification('Cancellation Requested', 'Your cancellation request was sent. If the order is not shipped, we will process it and notify you by email.', 'info');
+      alert('Cancellation request sent to BuildSmart PH support. If not shipped, we will cancel and refund per policy.');
+    }
+
+    /* Test helper: mark shipped (remove in production if desired) */
+    function simulateShipLastOrder() {
+      if(!lastOrderDetails) { alert('No order to ship'); return; }
+      lastOrderDetails.status = 'shipped';
+      const el = document.getElementById('orderStatusText'); if(el) el.innerText = lastOrderDetails.status;
+      pushSiteNotification('Order Shipped', 'Order has been marked as shipped. Cancellations are no longer allowed.', 'info');
+    }
+
+    /* Refund submit (sends seller email + onsite notification) */
+    function submitRefund() {
+      const reason = document.getElementById('refundReason').value.trim();
+      if(!reason){ alert('Please describe the issue.'); return; }
+      if(!lastOrderDetails){ alert('No recent order found.'); return; }
+
+      lastOrderDetails.status = 'refund_requested';
+
+      const txt = `REFUND REQUEST\nCustomer: ${lastOrderDetails.name} (${lastOrderDetails.email})\nReason:\n${reason}\n\nOrder details:\n${lastOrderDetails.details}`;
+
+      document.getElementById('sellerOrderDetails').value = txt;
+      document.getElementById('sellerCustomerName').value = lastOrderDetails.name;
+      document.getElementById('sellerCustomerEmail').value = lastOrderDetails.email;
+
+      try { document.getElementById('sellerForm').submit(); } catch(e) { console.warn('Seller form submit failed:', e); }
+      closeModal();
+
+      pushSiteNotification('Refund Request Sent', 'We received your refund request — BuildSmart PH will contact you at your email.', 'info');
+      alert('Refund request sent to BuildSmart PH support. We will contact you via email.');
+    }
+
+    function openModal(mode){ document.getElementById('modalTitle').innerText = mode==='refund' ? 'Request Refund' : 'Modal'; document.getElementById('modal').style.display = 'flex'; }
+    function closeModal(){ document.getElementById('modal').style.display = 'none'; }
+
+    function viewReceipt(){
+      if(!lastOrderDetails){ alert('No recent order'); return; }
+      // small readable alert for demo; replace with a nice popup if desired
+      alert(lastOrderDetails.details);
+    }
+
+    /* Checkout: creates lastOrderDetails, emails buyer & seller via FormSubmit */
+    function checkout() {
+      if(Object.keys(cart).length === 0){ alert('Cart is empty'); return; }
+      const name = document.getElementById('buyerName').value.trim();
+      const email = document.getElementById('buyerEmail').value.trim();
+      const address = document.getElementById('buyerAddress').value.trim();
+      const phone = document.getElementById('buyerPhone').value.trim();
+      if(!name||!email||!address||!phone){ alert('Please fill name, email, address, and phone'); return; }
+
+      let subtotal = 0;
+      let details = 'BuildSmart PH — E-Receipt\n\n';
+      details += `Customer: ${name}\nEmail: ${email}\nPhone: ${phone}\nAddress: ${address}\n\nItems:\n`;
+      for(const [k,item] of Object.entries(cart)){
+        const line = item.qty * item.price;
+        subtotal += line;
+        details += `${item.title} (${k}) x${item.qty} — ₱${line.toLocaleString()}\n`;
+      }
+      const shipping = parseInt(document.getElementById('shipping').value||'0');
+      const paymentMethod = document.getElementById('paymentMethod').value;
+      const voucher = parseInt(document.getElementById('voucher').value||'0');
+      voucherDiscount = voucher;
+      const total = Math.max(0, subtotal + shipping - voucherDiscount);
+      details += `\nSubtotal: ₱${subtotal.toLocaleString()}\nShipping: ₱${shipping.toLocaleString()}\nDiscount: ₱${voucherDiscount}\nTotal: ₱${total.toLocaleString()}\nPayment: ${paymentMethod}\n`;
+
+      const confirmed = confirm('Confirm order? OK to submit and email receipt. Cancel to review order.');
+      if(!confirmed) return;
+
+      const id = 'ORD-' + Date.now();
+      lastOrderDetails = { id, details, name, email, total, status: 'pending' };
+
+      // send seller email (your FormSubmit endpoint)
+      document.getElementById('sellerOrderDetails').value = `Order ID: ${id}\n\n` + details;
+      document.getElementById('sellerCustomerName').value = name;
+      document.getElementById('sellerCustomerEmail').value = email;
+      try { document.getElementById('sellerForm').submit(); } catch(e){ console.warn('Seller form submit failed:', e); }
+
+      // send buyer email (FormSubmit to buyer's email so they get an e-receipt)
+      const buyerForm = document.getElementById('buyerForm');
+      buyerForm.action = 'https://formsubmit.co/' + encodeURIComponent(email);
+      document.getElementById('buyerOrderDetails').value = `Order ID: ${id}\n\n` + details;
+      document.getElementById('buyerCustomerName').value = name;
+      try { buyerForm.submit(); } catch(e){ console.warn('Buyer form submit failed:', e); }
+
+      alert('Order placed! An e-receipt has been emailed to you.');
+      renderOrderResult();
+
+      // clear cart & inputs
+      cart = {}; voucherDiscount = 0;
+      document.getElementById('voucher').value = '0';
+      document.getElementById('buyerName').value=''; document.getElementById('buyerEmail').value=''; document.getElementById('buyerAddress').value=''; document.getElementById('buyerPhone').value='';
+      renderCart();
+    }
+
+    function toggleCart(show=true){
+      const panel = document.getElementById('cartPanel');
+      panel.style.display = show? 'block' : 'none';
+    }
+
+    // initial render
+    renderProducts();
+    renderCart();
+
+    // expose helper to console for testing (simulate shipping)
+    window.simulateShipLastOrder = simulateShipLastOrder;
+
+    // Optional: if you want to change products dynamically, edit the `products` array above.
+  </script>
 </body>
 </html>
