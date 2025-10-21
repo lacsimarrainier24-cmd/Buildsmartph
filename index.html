@@ -1,615 +1,802 @@
- <!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>BuildSmart PH — Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --brand:#004080;
-  --accent:#0066cc;
-  --muted:#f5f7fa;
-  --card:#fff;
-  --danger:#e53935;
-  --success:#2e8b57;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;background:var(--muted);color:#1f2937}
-header{background:linear-gradient(135deg,var(--brand),#0b4aa1);color:#fff;padding:28px 18px;text-align:center;position:relative}
-header h1{margin:0;font-size:1.6rem}
-header p{margin:6px 0 0;opacity:0.95;font-size:0.95rem}
-.cart-btn{position:absolute;right:18px;top:18px;background:rgba(255,255,255,0.12);border:0;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer}
-.container{max-width:1100px;margin:0 auto}
-main{max-width:1100px;margin:20px auto;padding:0 18px}
-section.card{background:var(--card);border-radius:12px;padding:18px;margin-bottom:16px;box-shadow:0 10px 30px rgba(5,15,30,0.04)}
-.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.product{background:linear-gradient(180deg,#fff,#fbfdff);border-radius:10px;padding:12px;text-align:center;transition:transform .18s,box-shadow .18s}
-.product:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(9,30,64,0.06)}
-.product img{width:100%;height:160px;object-fit:cover;border-radius:8px;display:block;margin-bottom:8px}
-.price{font-weight:700;color:var(--accent);margin-bottom:8px}
-.qty-row input{width:60px;padding:8px;border-radius:8px;border:1px solid #d7dbe6;text-align:center}
-.add{background:var(--brand);color:#fff;border:0;padding:10px 14px;border-radius:10px;cursor:pointer}
-#cartPanel{position:fixed;right:-520px;top:0;height:100vh;width:480px;background:#fff;border-left:1px solid #edf0f6;box-shadow:-20px 0 40px rgba(8,20,40,0.08);transition:right .34s;z-index:1200;padding:18px;overflow:auto}
-#cartPanel.open{right:0}
-.cart-row{display:flex;gap:10px;align-items:center;border:1px solid #f1f4f9;padding:10px;border-radius:8px;margin-bottom:10px}
-.cart-row img{width:64px;height:64px;object-fit:cover;border-radius:6px}
-.checkout-btn{width:100%;background:var(--brand);color:#fff;border:0;padding:10px;border-radius:10px;cursor:pointer;margin-top:10px}
-.small{font-size:0.9rem;color:#445872}
-.footer{text-align:center;padding:18px;color:#5b6b7f;font-size:0.95rem}
-.chat-bubble{position:fixed;right:18px;bottom:18px;width:62px;height:62px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1300;box-shadow:0 10px 30px rgba(3,25,64,0.18)}
-.chat-window{position:fixed;right:92px;bottom:20px;width:360px;max-height:520px;background:#fff;border:2px solid var(--brand);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;z-index:1300;box-shadow:0 18px 50px rgba(11,40,80,0.12)}
-.chat-header{background:linear-gradient(90deg,var(--brand),#0b4aa1);color:#fff;padding:10px;display:flex;align-items:center;justify-content:space-between}
-.chat-body{padding:10px;flex:1;overflow:auto;background:#f7fbff}
-.chat-input{display:flex;border-top:1px solid #e6eefb}
-.chat-input input{flex:1;padding:10px;border:0;outline:none}
-.chat-input button{background:var(--brand);color:#fff;border:0;padding:10px;cursor:pointer}
-.msg{margin-bottom:8px}
-.msg.me{text-align:right}
-.msg .bubble{display:inline-block;padding:8px 12px;border-radius:10px;background:#fff;border:1px solid #e5eefb}
-.msg.me .bubble{background:linear-gradient(90deg,var(--brand),var(--accent));color:#fff;border:0}
-.modal-backdrop{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.4);display:none;align-items:center;justify-content:center;z-index:1400}
-.modal{background:#fff;padding:16px;border-radius:10px;max-width:520px;width:92%}
-.btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
-.cancel-btn{background:#f3f5f8}
-#siteNotifications{margin-top:8px}
-.notification-card{border:1px solid #e6f0ff;background:#fbfdff;padding:8px;border-radius:8px;margin-bottom:8px}
-.notification-card.error{background:#fff5f5;border-color:#ffe3e3}
-.form-row{display:flex;gap:8px;flex-direction:column}
-.form-row input, .form-row textarea, .form-row select{padding:10px;border-radius:8px;border:1px solid #e7eefb}
-@media(max-width:900px){
-  #cartPanel{width:92%}
-  .chat-window{right:16px;bottom:92px;width:92%}
-  .chat-bubble{right:18px;bottom:18px}
-}
+  :root{
+    --bg:#f5f7fb; --card:#fff; --muted:#6b7280; --blue:#2563eb;
+    --accent:#0d6efd; --success:#198754; --danger:#ff4d4f;
+    --radius:12px; --shadow: 0 8px 28px rgba(20,30,60,0.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;color:#0b1220;background:var(--bg);-webkit-font-smoothing:antialiased}
+  a{color:var(--blue)}
+  header{background:linear-gradient(90deg,var(--accent),#1e90ff); color:#fff; padding:14px 18px; position:sticky; top:0; z-index:120; box-shadow:0 4px 14px rgba(2,6,23,0.08)}
+  .header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{font-weight:800; font-size:20px; letter-spacing:0.2px}
+  .nav{display:flex;gap:14px;align-items:center}
+  .nav a{color:rgba(255,255,255,0.95); text-decoration:none; font-weight:600}
+  .top-actions{display:flex;gap:10px;align-items:center}
+  .cart-btn{position:relative;background:transparent;border:none;color:#fff;cursor:pointer;font-weight:800;font-size:16px}
+  .cart-count{position:absolute;right:-8px;top:-8px;background:var(--danger);color:#fff;padding:4px 8px;border-radius:999px;font-weight:800;font-size:12px;box-shadow:0 6px 18px rgba(0,0,0,0.12)}
+  main.container{max-width:1200px;margin:22px auto;padding:0 18px}
+  .hero{background:linear-gradient(180deg, rgba(37,99,235,0.06), transparent);padding:18px;border-radius:12px;margin-bottom:18px}
+  .hero h1{margin:0;font-size:20px}
+  .hero p{margin:6px 0 0;color:var(--muted)}
+
+  /* Grid */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  @media(max-width:900px){ .grid{grid-template-columns:1fr} }
+
+  /* Product Card */
+  .card{background:var(--card);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;transition:transform .28s ease, box-shadow .28s ease;will-change:transform}
+  .card:hover{transform:translateY(-6px);box-shadow:0 12px 30px rgba(2,6,23,0.12)}
+  .card-top{display:flex;gap:14px;padding:14px}
+  .imgwrap{width:42%;max-width:220px;background:#111;padding:12px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+  .imgwrap img{max-width:100%;height:140px;object-fit:contain;border-radius:6px;background:#fff}
+  .meta{flex:1}
+  .category{color:var(--accent);font-weight:700;font-size:13px;margin-bottom:6px}
+  .title{margin:0;font-size:16px}
+  .rating{color:#f6b93b;font-weight:700;margin:6px 0;font-size:13px}
+  .price-row{display:flex;align-items:baseline;gap:12px;margin-top:6px;flex-wrap:wrap}
+  .price{font-weight:900;font-size:18px}
+  .old{color:var(--muted);text-decoration:line-through;font-size:13px}
+  .desc{color:var(--muted);font-size:13px;margin-top:8px}
+
+  /* Details (collapsible) */
+  .details{border-top:1px solid rgba(11,17,36,0.04);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+  .toggle{background:none;border:none;color:var(--accent);font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+  .details-content{overflow:hidden;max-height:0;transition:max-height .36s ease,padding .2s ease}
+  .details-content.open{padding-top:8px;max-height:1000px}
+  .features ul{margin:6px 0 0 18px;color:var(--muted)}
+  .specs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+  .spec{background:var(--bg);padding:8px;border-radius:8px;font-size:13px;color:var(--muted)}
+
+  /* purchase bar inside details */
+  .purchase{display:flex;gap:10px;align-items:center;margin-top:8px}
+  .qty{display:flex;align-items:center;gap:8px}
+  .qty button{width:34px;height:34px;border-radius:8px;border:1px solid rgba(11,17,36,0.06);background:#fff;cursor:pointer;font-weight:700}
+  .qty .value{min-width:28px;text-align:center;font-weight:800}
+  .add{flex:1;padding:10px;border-radius:10px;background:var(--accent);color:#fff;border:none;font-weight:800;cursor:pointer}
+
+  /* Cart Drawer */
+  .cart-drawer{position:fixed;right:-440px;top:0;width:420px;height:100%;background:var(--card);box-shadow:-8px 0 30px rgba(2,6,23,0.16);transition:right .42s cubic-bezier(.2,.9,.26,1.05);z-index:1400;display:flex;flex-direction:column}
+  .cart-drawer.open{right:0}
+  .cart-head{display:flex;align-items:center;justify-content:space-between;padding:18px;border-bottom:1px solid rgba(11,17,36,0.04)}
+  .cart-list{padding:12px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:12px}
+  .cart-row{display:flex;gap:10px;align-items:center}
+  .cart-row img{width:64px;height:48px;object-fit:cover;border-radius:8px}
+  .cart-controls{display:flex;gap:8px;align-items:center}
+  .cart-footer{padding:16px;border-top:1px solid rgba(11,17,36,0.04);display:flex;flex-direction:column;gap:8px}
+  .btn-primary{background:var(--accent);color:#fff;padding:12px;border-radius:10px;border:none;font-weight:800;cursor:pointer}
+  .btn-ghost{background:#fff;border:1px solid rgba(11,17,36,0.06);padding:10px;border-radius:8px;cursor:pointer}
+
+  /* Checkout overlay */
+  .overlay{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(2,6,23,0.35);display:none;align-items:center;justify-content:center;z-index:1600}
+  .overlay.open{display:flex}
+  .checkout-card{background:var(--card);width:760px;max-width:95%;border-radius:12px;padding:18px;box-shadow:var(--shadow);transform:translateY(10px);animation:fadeInUp .36s ease}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+  .checkout-grid{display:grid;grid-template-columns:1fr 360px;gap:18px}
+  @media(max-width:900px){ .checkout-card{padding:14px} .checkout-grid{grid-template-columns:1fr} .cart-drawer{width:100%} }
+
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+  .field input,.field textarea,.field select{padding:10px;border-radius:8px;border:1px solid rgba(11,17,36,0.06);font-size:14px}
+
+  .small{font-size:13px;color:var(--muted)}
+
+  /* Chat */
+  .chat-toggle{position:fixed;right:18px;bottom:20px;background:var(--accent);color:#fff;border-radius:999px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 8px 26px rgba(2,6,23,0.18);z-index:1500;cursor:pointer}
+  .chat-box{position:fixed;right:18px;bottom:86px;width:340px;background:var(--card);border-radius:12px;box-shadow:var(--shadow);display:none;flex-direction:column;overflow:hidden;z-index:1500}
+  .chat-box.open{display:flex}
+  .chat-header{background:var(--accent);color:#fff;padding:12px;font-weight:800;text-align:center}
+  .chat-body{padding:10px;max-height:320px;overflow:auto}
+  .chat-input{display:flex;padding:10px;border-top:1px solid rgba(11,17,36,0.04)}
+  .chat-input input{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(11,17,36,0.06)}
+
+  /* success popup */
+  .success{position:fixed;left:50%;top:20%;transform:translateX(-50%);background:var(--card);padding:18px;border-radius:12px;box-shadow:var(--shadow);display:none;z-index:1700;text-align:center}
+  .success.open{display:block}
+  .success h3{color:var(--success)}
+
+  /* Orders page */
+  .orders-section{margin-top:18px;background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow)}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .tab{padding:8px 12px;border-radius:999px;background:#f1f5f9;cursor:pointer;font-weight:700;color:var(--muted)}
+  .tab.active{background:var(--accent);color:#fff}
+
+  .order-card{background:#fff;border-radius:10px;padding:12px;box-shadow:0 6px 18px rgba(2,6,23,0.04);margin-bottom:10px}
+
+  /* small */
+  .muted{color:var(--muted);font-size:13px}
 </style>
 </head>
 <body>
+
+<!-- Header -->
 <header>
-  <div class="container">
-    <h1>BuildSmart PH</h1>
-    <p>Smart & sustainable civil engineering solutions — products, support, and quick service.</p>
+  <div class="header-inner">
+    <div class="brand">BuildSmart PH</div>
+    <nav class="nav">
+      <a href="#products" onclick="scrollToSection('products')">Products</a>
+      <a href="#orders" onclick="showOrdersSection()">My Orders</a>
+      <a href="#contact" onclick="scrollToSection('contact')">Contact</a>
+    </nav>
+    <div class="top-actions">
+      <button class="cart-btn" onclick="toggleCart()" aria-label="Open cart">🛒 Cart <span id="cartCount" class="cart-count">0</span></button>
+    </div>
   </div>
-  <button class="cart-btn" onclick="toggleCart(true)">🛒 Cart (<span id="cartCount">0</span>)</button>
 </header>
 
+<!-- Main -->
 <main class="container">
-  <!-- Company profile -->
-  <section class="card">
-    <h2>Company Profile</h2>
-    <p><strong>BuildSmart PH</strong> is a Filipino startup focused on sustainable construction tools and materials. We serve students, professionals, and small contractors with affordable, high-quality products and responsive customer support.</p>
-    <p class="small"><strong>Mission:</strong> Improve construction safety and efficiency through accessible engineering solutions.<br><strong>Vision:</strong> Be the Philippines’ trusted partner for smart building products.</p>
+  <section class="hero" id="top-hero">
+    <h1>Professional Construction Technology</h1>
+    <p>Quality tools, materials and safety gear for modern civil engineering projects.</p>
   </section>
 
   <!-- Products -->
-  <section id="products" class="card">
-    <h2>Products</h2>
-    <div class="products" id="productGrid">
-      <!-- Product cards inserted by JS if desired. For now we include a few example products -->
-      <div class="product">
-        <img src="buildmate.jpg" alt="BuildMate">
-        <h3>BuildMate™</h3>
-        <p>Smart construction tool for engineers and students.</p>
-        <div class="price">₱1,999</div>
-        <div style="margin-bottom:8px"><input id="qty-buildmate" type="number" min="1" value="1" style="width:68px;padding:8px;border-radius:6px;border:1px solid #e7eefb"></div>
-        <button class="add" onclick="addToCart('BuildMate™', parseInt(document.getElementById('qty-buildmate').value)||1, 1999, 'assets/buildmate.jpg')">Add to Cart</button>
-      </div>
+  <section id="products">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h2 style="margin:0">Products</h2>
+      <div class="small muted">Click details to expand features & specs</div>
+    </div>
 
-      <div class="product">
-        <img src="ecobricks.jpg" alt="EcoBricks">
-        <h3>EcoBricks+</h3>
-        <p>Sustainable, recyclable bricks for green building.</p>
-        <div class="price">₱799</div>
-        <div style="margin-bottom:8px"><input id="qty-ecobricks" type="number" min="1" value="1" style="width:68px;padding:8px;border-radius:6px;border:1px solid #e7eefb"></div>
-        <button class="add" onclick="addToCart('EcoBricks+', parseInt(document.getElementById('qty-ecobricks').value)||1, 799, 'assets/ecobricks.jpg')">Add to Cart</button>
-      </div>
+    <div class="grid" id="productGrid"></div>
+  </section>
 
-      <div class="product">
-        <img src="hydroshield.jpg" alt="HydroShield">
-        <h3>HydroShield™</h3>
-        <p>Advanced water-resistant construction coating.</p>
-        <div class="price">₱1,499</div>
-        <div style="margin-bottom:8px"><input id="qty-hydroshield" type="number" min="1" value="1" style="width:68px;padding:8px;border-radius:6px;border:1px solid #e7eefb"></div>
-        <button class="add" onclick="addToCart('HydroShield™', parseInt(document.getElementById('qty-hydroshield').value)||1, 1499, 'assets/hydroshield.jpg')">Add to Cart</button>
+  <!-- Orders (hidden initially) -->
+  <section id="ordersSection" style="display:none; margin-top:18px">
+    <h2>My Orders</h2>
+    <div class="orders-section">
+      <div class="tabs" id="orderTabs">
+        <div class="tab active" data-tab="all" onclick="switchOrderTab('all')">All</div>
+        <div class="tab" data-tab="toship" onclick="switchOrderTab('toship')">To Ship</div>
+        <div class="tab" data-tab="toreceive" onclick="switchOrderTab('toreceive')">To Receive</div>
+        <div class="tab" data-tab="completed" onclick="switchOrderTab('completed')">Completed</div>
+        <div class="tab" data-tab="cancelled" onclick="switchOrderTab('cancelled')">Cancelled</div>
+        <div class="tab" data-tab="refunded" onclick="switchOrderTab('refunded')">Refunded</div>
       </div>
-
-      <!-- Add more product cards here as needed -->
+      <div id="ordersList"></div>
     </div>
   </section>
 
-  <!-- Contact & Return policy -->
-  <section class="card" id="contact">
-    <h2>Contact Us</h2>
-    <p class="small">Have questions? Reach us or send order inquiries — we reply by email.</p>
-    <form id="contactForm" style="display:grid;gap:8px;max-width:600px" onsubmit="submitContact(event)">
-      <input type="text" id="contactName" placeholder="Your name" required>
-      <input type="email" id="contactEmail" placeholder="Your email" required>
-      <input type="text" id="contactPhone" placeholder="Phone (optional)">
-      <textarea id="contactMessage" rows="4" placeholder="Message" required></textarea>
-      <div style="display:flex;gap:8px">
-        <button class="btn" type="submit" style="background:var(--brand);color:#fff">Send Message</button>
-        <button class="btn cancel-btn" type="button" onclick="document.getElementById('contactForm').reset()">Clear</button>
-      </div>
-    </form>
-
-    <h3 style="margin-top:14px">Return & Refund Policy</h3>
-    <p class="small">Returns accepted within <strong>7 days</strong> after delivery for defective/damaged/incorrect items. To request a return/refund, open your cart and use <em>Request Refund</em>, or contact us here. Refunds will be processed after inspection and confirmation. Processing time: up to 7 business days.</p>
-  </section>
-
-  <!-- Simple FAQ / How to use -->
-  <section class="card">
-    <h2>How to Order</h2>
-    <ol class="small">
-      <li>Add products to cart → open Cart (top-right) → fill buyer details.</li>
-      <li>Choose shipping & payment → Checkout to email receipt & notify seller.</li>
-      <li>After checkout: you can Request Refund or Cancel order (before shipment).</li>
-      <li>Seller receives email via FormSubmit and will respond to the buyer's email.</li>
-    </ol>
+  <!-- Contact -->
+  <section id="contact" style="margin-top:18px">
+    <h3>Contact Us</h3>
+    <p class="muted">Email: <a href="mailto:lacsimarrainier24@gmail.com">lacsimarrainier24@gmail.com</a> · Phone: +63 XXX XXX XXXX</p>
   </section>
 </main>
 
-<!-- Cart Panel -->
-<div id="cartPanel" aria-hidden="true">
-  <h3>Your Cart</h3>
-
-  <!-- notifications -->
-  <div id="siteNotifications"></div>
-
-  <div id="cartItems"></div>
-
-  <div style="margin-top:10px" class="small">Voucher code (optional)</div>
-  <input type="text" id="voucher" placeholder="e.g. DISCOUNT50" style="padding:8px;border-radius:8px;border:1px solid #e7eefb">
-
-  <div style="margin-top:10px" class="small">Shipping option</div>
-  <select id="shipping" onchange="updateCartSummary()">
-    <option value="0">Standard (Free)</option>
-    <option value="100">Express (₱100)</option>
-    <option value="50">Store Pickup (₱50)</option>
-  </select>
-
-  <div style="margin-top:10px" class="small">Payment method</div>
-  <select id="paymentMethod">
-    <option value="Credit Card">Credit Card</option>
-    <option value="GCash">GCash</option>
-    <option value="PayPal">PayPal</option>
-    <option value="COD">Cash on Delivery</option>
-  </select>
-
-  <div style="margin-top:10px" class="small">Buyer information</div>
-  <input id="buyerName" placeholder="Full name" style="padding:8px;border-radius:8px;border:1px solid #e7eefb">
-  <input id="buyerEmail" placeholder="you@example.com" style="padding:8px;border-radius:8px;border:1px solid #e7eefb">
-  <input id="buyerPhone" placeholder="09XXXXXXXXX" style="padding:8px;border-radius:8px;border:1px solid #e7eefb">
-  <input id="buyerAddress" placeholder="Address, City, ZIP" style="padding:8px;border-radius:8px;border:1px solid #e7eefb">
-
-  <div class="summary" id="checkoutSummary" style="margin-top:10px"></div>
-
-  <div style="display:flex;gap:8px;margin-top:8px">
-    <button class="checkout-btn" onclick="checkout()">Checkout & Send Receipt</button>
-    <button class="btn cancel-btn" onclick="applyVoucher()">Apply Voucher</button>
+<!-- Cart Drawer -->
+<aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+  <div>
+    <div class="cart-head">
+      <div style="font-weight:800">Your Cart</div>
+      <button class="btn-ghost" onclick="toggleCart()">Close ✕</button>
+    </div>
+    <div class="cart-list" id="cartList"></div>
   </div>
 
-  <div style="margin-top:8px;display:flex;gap:8px">
-    <button class="btn" onclick="openModal('refund')">Request Refund</button>
-    <button class="btn cancel-btn" onclick="cancelCartOrOrder()">Cancel Order/Cart</button>
-    <button class="btn" onclick="viewLastOrder()">View Last Order</button>
+  <div class="cart-footer">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div class="small muted">Subtotal</div>
+      <div style="font-weight:800" id="cartSubtotal">₱0</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-ghost" onclick="clearCart()">Clear</button>
+      <button class="btn-primary" onclick="openCheckout()">Checkout</button>
+    </div>
   </div>
+</aside>
 
-  <!-- Hidden forms for FormSubmit -->
-  <form id="sellerForm" action="https://formsubmit.co/lacsimarrainier24@gmail.com" method="POST" target="_blank" style="display:none;">
-    <input type="hidden" name="_subject" value="🛒 BuildSmart PH — New Order / Request">
-    <input type="hidden" name="orderDetails" id="sellerOrderDetails">
-    <input type="hidden" name="customerName" id="sellerCustomerName">
-    <input type="hidden" name="customerEmail" id="sellerCustomerEmail">
-    <input type="hidden" name="type" id="sellerNoticeType">
-  </form>
+<!-- Checkout Overlay -->
+<div class="overlay" id="checkoutOverlay" aria-hidden="true">
+  <div class="checkout-card" role="dialog" aria-modal="true">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <h3 style="margin:0">Checkout</h3>
+      <button class="btn-ghost" onclick="closeCheckout()">Close ✕</button>
+    </div>
 
-  <form id="buyerForm" action="" method="POST" target="_blank" style="display:none;">
-    <input type="hidden" name="_subject" value="Your BuildSmart PH Order Confirmation">
-    <input type="hidden" name="orderDetails" id="buyerOrderDetails">
-    <input type="hidden" name="customerName" id="buyerCustomerName">
-  </form>
-</div>
+    <div class="checkout-grid">
+      <!-- left: form -->
+      <form id="checkoutForm" style="padding-right:4px" onsubmit="placeOrder(event)">
+        <input type="hidden" name="_subject" value="New BuildSmartPH Order">
+        <input type="hidden" name="_autoresponse" value="Thank you for ordering from BuildSmartPH! Your order has been received and is being processed. You’ll receive an update once it’s shipped.">
+        <input type="hidden" name="_template" value="box">
+        <!-- buyer info -->
+        <div class="field">
+          <label>Full name</label>
+          <input type="text" name="buyer_name" required>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="buyer_email" required>
+        </div>
+        <div class="field">
+          <label>Contact number</label>
+          <input type="text" name="buyer_phone" required placeholder="+63">
+        </div>
+        <div class="field">
+          <label>Shipping address</label>
+          <textarea name="buyer_address" rows="3" required></textarea>
+        </div>
 
-<!-- Modal -->
-<div class="modal-backdrop" id="modalBackdrop">
-  <div class="modal">
-    <h3 id="modalTitle">Request Refund</h3>
-    <p id="modalText">Describe the issue and include order ID (if available).</p>
-    <textarea id="modalInput" rows="5" style="width:100%;padding:8px;border-radius:8px;border:1px solid #e7eefb"></textarea>
-    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
-      <button class="btn cancel-btn" onclick="closeModal()">Close</button>
-      <button class="btn" style="background:var(--brand);color:#fff" onclick="submitModalAction()">Submit</button>
+        <!-- payment methods -->
+        <div class="field">
+          <label>Payment method</label>
+          <select name="payment_method" id="pmethod" required onchange="togglePaymentFields()">
+            <option value="cod">Cash on Delivery</option>
+            <option value="gcash">GCash</option>
+            <option value="card">Credit / Debit Card</option>
+            <option value="paypal">PayPal</option>
+          </select>
+        </div>
+
+        <div id="payFields">
+          <!-- GCash -->
+          <div class="field pay-gcash" style="display:none">
+            <label>GCash number</label>
+            <input type="text" name="gcash_number" placeholder="0917xxxxxxx">
+          </div>
+
+          <!-- Card -->
+          <div class="field pay-card" style="display:none">
+            <label>Cardholder name</label>
+            <input type="text" name="card_name" placeholder="Name on card">
+            <label>Card number</label>
+            <input type="text" name="card_number" placeholder="1234 5678 9012 3456" maxlength="19">
+            <div style="display:flex;gap:8px">
+              <input type="text" name="card_exp" placeholder="MM/YY" style="flex:1">
+              <input type="text" name="card_cvv" placeholder="CVV" style="width:100px">
+            </div>
+          </div>
+
+          <!-- PayPal -->
+          <div class="field pay-paypal" style="display:none">
+            <label>PayPal email</label>
+            <input type="email" name="paypal_email" placeholder="your-paypal@example.com">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Voucher code (optional)</label>
+          <input type="text" id="voucherInput" name="voucher_code" placeholder="ENTER VOUCHER">
+        </div>
+
+        <!-- hidden order summary will be filled by JS before submit -->
+        <input type="hidden" name="order_summary" id="orderSummaryInput">
+        <input type="hidden" name="order_total" id="orderTotalInput">
+
+        <div style="display:flex;gap:8px">
+          <button type="button" class="btn-ghost" onclick="saveDraft()">Save Draft</button>
+          <button type="submit" class="btn-primary">Place Order</button>
+        </div>
+      </form>
+
+      <!-- right: order preview -->
+      <aside style="border-left:1px solid rgba(11,17,36,0.04);padding-left:12px">
+        <div style="font-weight:800;margin-bottom:8px">Order Summary</div>
+        <div id="checkoutPreview" style="display:flex;flex-direction:column;gap:8px;max-height:420px;overflow:auto"></div>
+        <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center">
+          <div class="small muted">Subtotal</div>
+          <div style="font-weight:900" id="checkoutSubtotal">₱0</div>
+        </div>
+        <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center">
+          <div class="small muted">Discount</div>
+          <div id="checkoutDiscount" class="small muted">₱0</div>
+        </div>
+        <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:800">Total</div>
+          <div style="font-weight:900" id="checkoutTotal">₱0</div>
+        </div>
+      </aside>
     </div>
   </div>
 </div>
 
-<!-- Chat UI -->
-<div class="chat-bubble" id="chatBubble" title="Chat with BuildSmart" onclick="openChat()">💬</div>
-<div class="chat-window" id="chatWindow" style="display:none">
-  <div class="chat-header"><strong>BuildSmart Assistant</strong><div><button class="chat-close" onclick="closeChat()">✖</button></div></div>
-  <div class="chat-body" id="chatBody"></div>
-  <div style="padding:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-    <button class="btn" onclick="quick('shipping')">Shipping</button>
-    <button class="btn" onclick="quick('payment')">Payment</button>
-    <button class="btn" onclick="quick('refund')">Refund</button>
-    <button class="btn" onclick="quick('cancel')">Cancel Order</button>
+<!-- Success popup -->
+<div class="success" id="successPopup" role="status" aria-live="polite">
+  <h3>✅ Order Confirmed!</h3>
+  <p>Thank you for shopping with <strong>BuildSmart PH</strong>.<br>We've sent a confirmation to your email.</p>
+  <div style="margin-top:12px"><button class="btn-primary" onclick="closeSuccess()">Close</button> <button class="btn-ghost" onclick="printOrder()">Print</button></div>
+</div>
+
+<!-- Chat -->
+<div class="chat-toggle" id="chatToggle" title="Chat with BuildSmart Assistant" onclick="toggleChat()">💬</div>
+<div class="chat-box" id="chatBox" aria-hidden="true">
+  <div class="chat-header">BuildSmart Assistant</div>
+  <div class="chat-body" id="chatBody">
+    <div style="font-weight:700;margin-bottom:6px">Hi — I'm BuildSmart Assistant. How can I help?</div>
+    <div class="small muted">Try: "How to order", "Cancel order", "Track my parcel", "Tell me about HydroShield"</div>
   </div>
   <div class="chat-input">
-    <input id="chatInput" placeholder="Ask about products, orders, refund, or say 'add BuildMate to cart'">
-    <button onclick="handleChat()">Send</button>
+    <input id="chatInput" placeholder="Type a question and press Enter" onkeypress="chatHandleKey(event)">
   </div>
 </div>
 
-<footer class="footer">
-  <div>BuildSmart PH • Rainier Ramiscal</div>
-  <div style="margin-top:6px"><a href="#contact">Contact</a> • <a href="#contact">Return & Refund Policy</a></div>
+<footer style="margin-top:26px;background:#0b1220;color:#cbd5e1;padding:18px 16px;text-align:center">
+  © 2025 BuildSmart PH — Contact: <a href="mailto:lacsimarrainier24@gmail.com">lacsimarrainier24@gmail.com</a>
 </footer>
 
 <script>
-/* ===========================
-   App state
-   =========================== */
-let cart = {}; // { name: {qty, price, img} }
-let voucherDiscount = 0;
-
-// last order record (client-side only)
-let lastOrderDetails = null; // {id, details, name, email, total, status}
-
-/* ---------------------------
-   Utility helpers
-   --------------------------- */
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])); }
-function escapeJS(s){ return String(s).replace(/'/g,"\\'").replace(/"/g,'\\"'); }
-
-/* ---------------------------
-   On-site notifications
-   --------------------------- */
-function pushSiteNotification(title, text, type='info'){
-  const container = document.getElementById('siteNotifications');
-  if(!container) return;
-  const note = document.createElement('div');
-  note.className = 'notification-card' + (type==='error' ? ' error' : '');
-  note.innerHTML = `<strong>${escapeHtml(title)}</strong><div style="font-size:0.95rem;color:#445872;margin-top:6px">${escapeHtml(text)}</div>`;
-  container.prepend(note);
-  setTimeout(()=>{ if(note.parentNode) note.parentNode.removeChild(note); }, 12000);
-}
-
-/* ---------------------------
-   Cart functions
-   --------------------------- */
-function updateCartCount(){
-  const count = Object.values(cart).reduce((s,i)=>s + (i.qty||0), 0);
-  document.getElementById('cartCount').innerText = count;
-}
-function addToCart(name, qty, price, img){
-  qty = parseInt(qty)||1;
-  if(cart[name]) cart[name].qty += qty;
-  else cart[name] = {qty, price, img};
-  renderCart();
-  toggleCart(true);
-  pushSiteNotification('Added to cart', `${name} × ${qty} added.`, 'info');
-}
-function renderCart(){
-  const container = document.getElementById('cartItems');
-  container.innerHTML = '';
-  if(Object.keys(cart).length === 0){
-    container.innerHTML = '<div class="small">Your cart is empty.</div>';
-    updateCartSummary();
-    updateCartCount();
-    return;
+/* ========= Product data ========= */
+const PRODUCTS = [
+  {
+    id: 'p-hydroshield',
+    title: 'HydroShield™ — Smart Drainage Panel System',
+    category: 'Drainage Systems',
+    rating: 4.6,
+    reviews: 89,
+    price: 1899,
+    old: 2299,
+    desc: 'Modular drainage panels that reduce flooding through efficient water control and smart design.',
+    features: ['Modular design', 'Easy installation', 'High water flow capacity', 'Durable materials', 'Smart water control', 'Eco-friendly'],
+    specs: { 'Panel Size': '1 m × 0.5 m', 'Flow Rate': '200 L/min per panel', 'Material': 'Recycled HDPE', 'Load Capacity': '5000 kg/m²', 'Installation': 'Interlocking system', 'Warranty': '10 years' },
+    stock: 25,
+    img: 'hydroshield.jpg'
+  },
+  {
+    id: 'p-civimix',
+    title: 'CiviMix™ — Concrete Strength Additive',
+    category: 'Additives',
+    rating: 4.7,
+    reviews: 203,
+    price: 599,
+    old: 799,
+    desc: 'Nano-additive that improves concrete strength and curing time for enhanced construction performance.',
+    features: ['Nano-technology formula', 'Improves strength by 30%', 'Faster curing time', 'Easy to mix', 'Compatible with all cement types', 'Long shelf life'],
+    specs: { 'Package Size': '25 kg bag', 'Dosage': '2–4% by cement weight', 'Strength Increase': 'Up to 30%', 'Curing Time Reduction': '40%', 'Shelf Life': '2 years', 'Storage': 'Dry conditions' },
+    stock: 200,
+    img: 'civimix.jpg'
+  },
+  {
+    id: 'p-ecobricks',
+    title: 'EcoBricks+™ — Recycled Construction Blocks',
+    category: 'Building Materials',
+    rating: 4.4,
+    reviews: 156,
+    price: 899,
+    old: 1199,
+    desc: 'Sustainable blocks made from recycled plastic and sand, perfect for eco-friendly construction projects.',
+    features: ['Made from recycled materials', 'Lightweight yet strong', 'Weather resistant', 'Easy to handle', 'Sustainable construction', 'Cost-effective'],
+    specs: { 'Dimensions': '200 × 100 × 60 mm', 'Weight': '1.8 kg / block', 'Compressive Strength': '15 MPa', 'Material': '70% recycled plastic, 30% sand', 'Fire Rating': 'Class A', 'Thermal Conductivity': '0.15 W/mK' },
+    stock: 500,
+    img: 'ecobricks.jpg'
+  },
+  {
+    id: 'p-buildmate',
+    title: 'BuildMate™ — Portable Concrete Strength Tester',
+    category: 'Testing Equipment',
+    rating: 4.8,
+    reviews: 124,
+    price: 2499,
+    old: 2999,
+    desc: 'Handheld device that measures compressive strength and temperature of concrete with high precision and reliability.',
+    features: ['Digital backlit LCD', 'Auto-calibration and memory storage', 'Compact, impact-resistant body', 'Rechargeable lithium battery (10 hrs)', 'Waterproof and dustproof (IP65)'],
+    specs: { 'Measurement Range': '10–100 MPa', 'Accuracy': '±0.1 MPa', 'Battery': '3.7V 2000mAh Li-ion', 'Weight': '1.2 kg', 'Material': 'Reinforced ABS' },
+    stock: 15,
+    img: 'buildmate.jpg'
+  },
+  {
+    id: 'p-buildwear',
+    title: 'BuildWear™ — Safety and Field Gear',
+    category: 'Safety Equipment',
+    rating: 4.5,
+    reviews: 178,
+    price: 799,
+    old: 999,
+    desc: 'Durable PPE and field accessories designed for construction professionals and safety compliance.',
+    features: ['Complete safety set', 'High-visibility colors', 'Comfortable fit', 'Durable materials', 'Meets safety standards'],
+    specs: { 'Set Includes': 'Hard hat, vest, gloves, glasses', 'Standards': 'ANSI / ISEA compliant', 'Sizes': 'S, M, L, XL, XXL', 'Material': 'High-vis polyester', 'Warranty': '1 year' },
+    stock: 45,
+    img: 'buildwear.jpg'
   }
-  for(const [name,item] of Object.entries(cart)){
+];
+
+/* ========= Render products ========= */
+const productGrid = document.getElementById('productGrid');
+
+function renderProducts(){
+  productGrid.innerHTML = '';
+  PRODUCTS.forEach(p=>{
+    const card = document.createElement('article');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="imgwrap"><img src="${p.img}" alt="${escapeHtml(p.title)}" onerror="this.onerror=null;this.src='https://via.placeholder.com/300x180?text=Product'"></div>
+        <div class="meta">
+          <div class="category">${escapeHtml(p.category)}</div>
+          <h3 class="title">${escapeHtml(p.title)}</h3>
+          <div class="rating">⭐️ ${p.rating} <span class="muted">(${p.reviews} reviews)</span></div>
+          <div class="price-row"><div class="price">₱${formatNum(p.price)}</div><div class="old">₱${formatNum(p.old)}</div></div>
+          <div class="desc">${escapeHtml(p.desc)}</div>
+        </div>
+      </div>
+
+      <div class="details">
+        <button class="toggle" onclick="toggleDetails(this)">View Details ▼</button>
+
+        <div class="details-content" aria-hidden="true">
+          <div class="features"><strong>Key Features</strong>
+            <ul>${p.features.map(f=>`<li>${escapeHtml(f)}</li>`).join('')}</ul>
+          </div>
+
+          <div style="margin-top:8px"><strong>Specifications</strong>
+            <div class="specs">${Object.entries(p.specs).map(([k,v])=>`<div class="spec"><strong>${escapeHtml(k)}:</strong><div class="muted">${escapeHtml(v)}</div></div>`).join('')}</div>
+          </div>
+
+          <div class="muted" style="margin-top:8px">Stock: ${p.stock} available</div>
+
+          <div class="purchase">
+            <div class="qty" aria-label="quantity selector">
+              <button onclick="changeQty('${p.id}', -1)">−</button>
+              <div class="value" id="qty-${p.id}">1</div>
+              <button onclick="changeQty('${p.id}', 1)">+</button>
+            </div>
+            <button class="add" onclick="addToCart('${p.id}')">🛒 Add to Cart — ₱${formatNum(p.price)}</button>
+          </div>
+        </div>
+      </div>
+    `;
+    productGrid.appendChild(card);
+  });
+}
+
+/* ========= Utilities ========= */
+function formatNum(n){ return n.toLocaleString('en-PH'); }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+/* ========= Cart logic (localStorage) ========= */
+const CART_KEY = 'buildsmartph_cart_v4';
+function readCart(){ try{ return JSON.parse(localStorage.getItem(CART_KEY)) || []; }catch(e){return []} }
+function writeCart(c){ localStorage.setItem(CART_KEY, JSON.stringify(c)); updateCartCount(); renderCart(); }
+function updateCartCount(){ const c = readCart(); const total = c.reduce((s,i)=>s+i.qty,0); document.getElementById('cartCount').textContent = total; }
+function findProduct(id){ return PRODUCTS.find(p=>p.id===id); }
+
+function addToCart(pid){
+  const qtyEl = document.getElementById(`qty-${pid}`);
+  const qty = qtyEl ? parseInt(qtyEl.textContent||'1',10) : 1;
+  const prod = findProduct(pid);
+  if(!prod) return;
+  const cart = readCart();
+  const existing = cart.find(i=>i.id===pid);
+  if(existing){
+    if(existing.qty + qty > prod.stock){ showToast('Not enough stock'); return; }
+    existing.qty += qty;
+  } else {
+    if(qty > prod.stock){ showToast('Not enough stock'); return; }
+    cart.push({ id: pid, qty: qty });
+  }
+  writeCart(cart);
+  openCart(true);
+  showToast('Item added to cart');
+}
+
+function changeQty(pid, delta){
+  const el = document.getElementById(`qty-${pid}`);
+  if(!el) return;
+  let v = parseInt(el.textContent||'1',10);
+  v = Math.max(1, v + delta);
+  el.textContent = v;
+}
+
+/* Cart drawer rendering */
+function renderCart(){
+  const list = document.getElementById('cartList');
+  const cart = readCart();
+  list.innerHTML = '';
+  let subtotal = 0;
+  cart.forEach(item=>{
+    const p = findProduct(item.id);
+    if(!p) return;
     const row = document.createElement('div');
     row.className = 'cart-row';
-    row.innerHTML = `<img src="${escapeHtml(item.img||'assets/placeholder.jpg')}" alt="${escapeHtml(name)}"><div style="flex:1"><strong>${escapeHtml(name)}</strong><div class="small">₱${item.price.toLocaleString()}</div></div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-      <div><input type="number" min="1" value="${item.qty}" onchange="updateQty('${escapeJS(name)}', this.value)"></div>
-      <div><button class="btn cancel-btn" onclick="removeItem('${escapeJS(name)}')">Remove</button></div>
-    </div>`;
-    container.appendChild(row);
+    row.innerHTML = `
+      <img src="${p.img}" alt="${escapeHtml(p.title)}" onerror="this.onerror=null;this.src='https://via.placeholder.com/80x60?text=Img'">
+      <div style="flex:1">
+        <div style="font-weight:800">${escapeHtml(p.title)}</div>
+        <div class="muted">₱${formatNum(p.price)} × ${item.qty}</div>
+        <div style="margin-top:6px;display:flex;gap:8px;align-items:center">
+          <button class="btn-ghost" onclick="decreaseCartQty('${item.id}')">−</button>
+          <div class="small muted" id="cart-qty-${item.id}">${item.qty}</div>
+          <button class="btn-ghost" onclick="increaseCartQty('${item.id}')">+</button>
+          <button class="btn-ghost" style="margin-left:8px" onclick="removeFromCart('${item.id}')">Remove</button>
+        </div>
+      </div>
+      <div style="font-weight:800">₱${formatNum(p.price * item.qty)}</div>
+    `;
+    list.appendChild(row);
+    subtotal += p.price * item.qty;
+  });
+  document.getElementById('cartSubtotal').textContent = `₱${formatNum(subtotal)}`;
+  // update preview if checkout open
+  updateCheckoutPreview();
+}
+
+/* cart qty helpers */
+function increaseCartQty(id){ const cart = readCart(); const item = cart.find(i=>i.id===id); if(!item) return; const p = findProduct(id); if(item.qty+1>p.stock){ showToast('Not enough stock'); return; } item.qty++; writeCart(cart); }
+function decreaseCartQty(id){ const cart = readCart(); const item = cart.find(i=>i.id===id); if(!item) return; if(item.qty<=1) return; item.qty--; writeCart(cart); }
+function removeFromCart(id){ let cart = readCart(); cart = cart.filter(i=>i.id!==id); writeCart(cart); }
+function clearCart(){ if(!confirm('Clear cart?')) return; localStorage.removeItem(CART_KEY); writeCart([]); }
+
+/* open/close cart */
+function toggleCart(){ const el = document.getElementById('cartDrawer'); el.classList.toggle('open'); el.setAttribute('aria-hidden', !el.classList.contains('open')); }
+function openCart(noFocus){ const el = document.getElementById('cartDrawer'); el.classList.add('open'); el.setAttribute('aria-hidden','false'); if(!noFocus) document.getElementById('cartList').focus(); }
+
+/* Toast */
+let toastTimer=0;
+function showToast(msg, ms=1600){
+  const t = document.getElementById('__toast_el');
+  if(!t){
+    const n = document.createElement('div'); n.id='__toast_el';
+    n.style= "position:fixed;left:50%;transform:translateX(-50%);bottom:26px;background:#111;color:#fff;padding:10px 14px;border-radius:8px;box-shadow:0 8px 26px rgba(0,0,0,0.24);z-index:1700";
+    document.body.appendChild(n);
   }
-  updateCartSummary();
-  updateCartCount();
-}
-function updateQty(name, qty){ qty = parseInt(qty)||1; if(cart[name]) cart[name].qty = qty; renderCart(); }
-function removeItem(name){ delete cart[name]; renderCart(); }
-
-/* ---------------------------
-   Summary & voucher
-   --------------------------- */
-function applyVoucher(){ const code = (document.getElementById('voucher').value||'').trim().toUpperCase(); if(code==='DISCOUNT50'){ voucherDiscount = 50; pushSiteNotification('Voucher applied','₱50 discount applied.','info'); } else { voucherDiscount = 0; pushSiteNotification('Invalid voucher','No discount applied.','error'); } updateCartSummary(); }
-function updateCartSummary(){
-  let subtotal = 0; for(const i of Object.values(cart)) subtotal += i.qty * i.price;
-  const shipping = parseInt(document.getElementById('shipping').value||'0');
-  const total = Math.max(0, subtotal + shipping - voucherDiscount);
-  document.getElementById('checkoutSummary').innerHTML = `
-    <div style="display:flex;justify-content:space-between"><span>Subtotal</span><span>₱${subtotal.toLocaleString()}</span></div>
-    <div style="display:flex;justify-content:space-between"><span>Shipping</span><span>₱${shipping.toLocaleString()}</span></div>
-    <div style="display:flex;justify-content:space-between"><span>Discount</span><span>-₱${voucherDiscount}</span></div>
-    <hr style="border:none;border-top:1px solid #eef6ff;margin:8px 0">
-    <div style="display:flex;justify-content:space-between;font-weight:800;color:var(--brand)"><span>Total</span><span>₱${total.toLocaleString()}</span></div>
-  `;
+  const node = document.getElementById('__toast_el');
+  node.textContent = msg;
+  node.style.display='block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> node.style.display='none', ms);
 }
 
-/* ---------------------------
-   Checkout & Order flow
-   --------------------------- */
-function checkout(){
-  if(Object.keys(cart).length === 0){ alert('Cart is empty'); return; }
-  const name = document.getElementById('buyerName').value.trim();
-  const email = document.getElementById('buyerEmail').value.trim();
-  const phone = document.getElementById('buyerPhone').value.trim();
-  const address = document.getElementById('buyerAddress').value.trim();
-  if(!name || !email || !address || !phone){ alert('Please fill name, email, address, and phone'); return; }
+/* ========= Checkout & FormSubmit ========= */
+const ORDERS_KEY = 'buildsmartph_orders_v1';
 
+function openCheckout(){
+  const cart = readCart();
+  if(cart.length===0){ showToast('Cart is empty'); return; }
+  document.getElementById('checkoutOverlay').classList.add('open'); document.getElementById('checkoutOverlay').setAttribute('aria-hidden','false');
+  updateCheckoutPreview();
+  fillHiddenOrderFields(); // in case
+}
+function closeCheckout(){ document.getElementById('checkoutOverlay').classList.remove('open'); document.getElementById('checkoutOverlay').setAttribute('aria-hidden','true'); }
+
+function updateCheckoutPreview(){
+  const preview = document.getElementById('checkoutPreview');
+  const cart = readCart();
+  preview.innerHTML = '';
   let subtotal = 0;
-  let details = 'BuildSmart PH — E-Receipt\\n\\n';
-  details += `Customer: ${name}\\nEmail: ${email}\\nPhone: ${phone}\\nAddress: ${address}\\n\\nItems:\\n`;
-  for(const [k,item] of Object.entries(cart)){
-    const line = item.qty * item.price;
-    subtotal += line;
-    details += `${k} x${item.qty} — ₱${line.toLocaleString()}\\n`;
-  }
-  const shipping = parseInt(document.getElementById('shipping').value||'0');
-  const paymentMethod = document.getElementById('paymentMethod').value;
-  const total = Math.max(0, subtotal + shipping - voucherDiscount);
-  details += `\\nSubtotal: ₱${subtotal.toLocaleString()}\\nShipping: ₱${shipping.toLocaleString()}\\nDiscount: ₱${voucherDiscount}\\nTotal: ₱${total.toLocaleString()}\\nPayment: ${paymentMethod}\\n`;
-
-  if(!confirm('Confirm order? OK to submit and email receipt. Cancel to review order.')) return;
-
-  const id = 'ORD-' + Date.now();
-  lastOrderDetails = { id, details, name, email, total, status: 'pending' };
-
-  // send seller email via FormSubmit
-  document.getElementById('sellerOrderDetails').value = `Order ID: ${id}\\n\\n` + details;
-  document.getElementById('sellerCustomerName').value = name;
-  document.getElementById('sellerCustomerEmail').value = email;
-  document.getElementById('sellerNoticeType').value = 'new_order';
-  try { document.getElementById('sellerForm').submit(); } catch(e){ console.warn('Seller submit failed', e); }
-
-  // send buyer email
-  const buyerForm = document.getElementById('buyerForm');
-  buyerForm.action = 'https://formsubmit.co/' + encodeURIComponent(email);
-  document.getElementById('buyerOrderDetails').value = `Order ID: ${id}\\n\\n` + details;
-  document.getElementById('buyerCustomerName').value = name;
-  try { buyerForm.submit(); } catch(e) { console.warn('Buyer submit failed', e); }
-
-  pushSiteNotification('Order Placed', 'Order ID ' + id + ' placed. Receipt sent via email.', 'info');
-  renderOrderBox();
-
-  // clear cart and inputs
-  cart = {}; voucherDiscount = 0;
-  document.getElementById('voucher').value = '';
-  document.getElementById('buyerName').value = '';
-  document.getElementById('buyerEmail').value = '';
-  document.getElementById('buyerPhone').value = '';
-  document.getElementById('buyerAddress').value = '';
-  renderCart(); toggleCart(false);
+  cart.forEach(item=>{
+    const p = findProduct(item.id);
+    const row = document.createElement('div');
+    row.style.display='flex';row.style.justifyContent='space-between';row.style.alignItems='center';
+    row.innerHTML = `<div><div style="font-weight:700">${escapeHtml(p.title)}</div><div class="muted">x ${item.qty}</div></div><div>₱${formatNum(p.price*item.qty)}</div>`;
+    preview.appendChild(row);
+    subtotal += p.price * item.qty;
+  });
+  const voucher = document.getElementById('voucherInput') ? document.getElementById('voucherInput').value.trim() : '';
+  let discount = 0;
+  // simple voucher logic: "BUILD10" -> 10% off, "SHIPFREE" -> 100 shipping discount
+  if(voucher.toUpperCase()==='BUILD10') discount = Math.round(subtotal * 0.10);
+  document.getElementById('checkoutSubtotal').textContent = `₱${formatNum(subtotal)}`;
+  document.getElementById('checkoutDiscount').textContent = discount ? `₱${formatNum(discount)}` : '₱0';
+  const total = subtotal - discount;
+  document.getElementById('checkoutTotal').textContent = `₱${formatNum(total)}`;
+  // also update hidden fields
+  document.getElementById('orderTotalInput') && (document.getElementById('orderTotalInput').value = total);
+  return { subtotal, discount, total };
 }
 
-/* Render last-order box in cart panel */
-function renderOrderBox(){
-  const panel = document.getElementById('cartPanel');
-  const existing = document.getElementById('lastOrderBox');
-  if(existing) existing.remove();
-  if(!lastOrderDetails) return;
-  const node = document.createElement('div');
-  node.id = 'lastOrderBox';
-  node.style.border = '1px solid #e6f0ff';
-  node.style.padding = '10px';
-  node.style.borderRadius = '8px';
-  node.style.marginTop = '8px';
-  node.innerHTML = `<strong>Order ID: ${escapeHtml(lastOrderDetails.id)}</strong>
-    <div class="small">Status: <em id="orderStatusText">${escapeHtml(lastOrderDetails.status)}</em></div>
-    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-      <button class="btn" onclick="openModal('refund')">Request Refund / Return</button>
-      <button class="btn cancel-btn" onclick="cancelOrderAfterCheckout()">Request Cancel</button>
-      <button class="btn" onclick="viewLastOrder()">View Receipt</button>
-      <button class="btn" onclick="simulateShipLastOrder()">(DEV) Mark Shipped</button>
-    </div>`;
-  panel.insertBefore(node, panel.firstChild.nextSibling);
+function fillHiddenOrderFields(){
+  const summary = generateOrderSummaryString();
+  const input = document.getElementById('orderSummaryInput');
+  const totalInput = document.getElementById('orderTotalInput');
+  if(input) input.value = summary;
+  if(totalInput){ const totals = updateCheckoutPreview(); totalInput.value = totals.total; }
 }
 
-/* Cancel after checkout */
-function cancelOrderAfterCheckout(){
-  if(!lastOrderDetails){ alert('No recent order to cancel.'); return; }
-  if(lastOrderDetails.status === 'shipped'){ alert('Order already shipped; cannot cancel. Please request a refund.'); return; }
-  if(lastOrderDetails.status === 'cancel_requested'){ alert('Cancellation already requested.'); return; }
-
-  if(!confirm('Send cancellation request to seller? If the order is not shipped, we will cancel and refund.')) return;
-  lastOrderDetails.status = 'cancel_requested';
-  const el = document.getElementById('orderStatusText'); if(el) el.innerText = lastOrderDetails.status;
-
-  const txt = `CANCELLATION REQUEST\\nOrder ID: ${lastOrderDetails.id}\\nCustomer: ${lastOrderDetails.name} (${lastOrderDetails.email})\\n\\nOrder Details:\\n${lastOrderDetails.details}\\n\\nRequest: Cancel before shipment.`;
-  document.getElementById('sellerOrderDetails').value = txt;
-  document.getElementById('sellerCustomerName').value = lastOrderDetails.name;
-  document.getElementById('sellerCustomerEmail').value = lastOrderDetails.email;
-  document.getElementById('sellerNoticeType').value = 'cancellation';
-  try { document.getElementById('sellerForm').submit(); } catch(e){ console.warn('Seller submit failed', e); }
-
-  pushSiteNotification('Cancellation Requested', 'We sent your cancellation request to seller.', 'info');
-  alert('Cancellation request sent. Seller will contact you via email.');
+/* Generate order summary text */
+function generateOrderSummaryString(){
+  const cart = readCart();
+  if(cart.length===0) return '';
+  let lines = [];
+  cart.forEach(item=>{
+    const p = findProduct(item.id);
+    lines.push(`${p.title} x${item.qty} — ₱${formatNum(p.price * item.qty)}`);
+  });
+  const totals = updateCheckoutPreview();
+  lines.push('');
+  lines.push(`Subtotal: ₱${formatNum(totals.subtotal)}`);
+  lines.push(`Discount: ₱${formatNum(totals.discount)}`);
+  lines.push(`Total: ₱${formatNum(totals.total)}`);
+  return lines.join('\n');
 }
 
-/* Refund/Return request */
-let modalActionType = 'refund'; // 'refund' or 'contact'
-function openModal(type){
-  modalActionType = type || 'refund';
-  document.getElementById('modalBackdrop').style.display = 'flex';
-  if(type === 'refund'){
-    document.getElementById('modalTitle').innerText = 'Request Refund / Return';
-    document.getElementById('modalText').innerText = 'Describe the reason (defective, damaged, incorrect). Include Order ID if available.';
-  } else {
-    document.getElementById('modalTitle').innerText = 'Contact Support';
-    document.getElementById('modalText').innerText = 'Message to support.';
-  }
-  document.getElementById('modalInput').value = '';
-}
-function closeModal(){ document.getElementById('modalBackdrop').style.display = 'none'; document.getElementById('modalInput').value = ''; }
-
-function submitModalAction(){
-  const msg = document.getElementById('modalInput').value.trim();
-  if(!msg){ alert('Please describe the issue.'); return; }
-  if(!lastOrderDetails && modalActionType==='refund'){
-    // allow refund request even if last order not present in this session: include buyer email if provided
-    const buyerEmail = document.getElementById('buyerEmail').value.trim();
-    if(!buyerEmail){ if(!confirm('No order recorded. Send message to seller anyway?')) return; }
-  }
-  // prepare message to seller
-  const type = modalActionType === 'refund' ? 'refund_request' : 'support_message';
-  let text = '';
-  if(lastOrderDetails){
-    text += `${type.toUpperCase()}\\nOrder ID: ${lastOrderDetails.id}\\nCustomer: ${lastOrderDetails.name} (${lastOrderDetails.email})\\n\\nMessage:\\n${msg}\\n\\nOrder details:\\n${lastOrderDetails.details}`;
-    lastOrderDetails.status = (modalActionType === 'refund') ? 'refund_requested' : lastOrderDetails.status;
-    const el = document.getElementById('orderStatusText'); if(el) el.innerText = lastOrderDetails.status;
-  } else {
-    const buyerName = document.getElementById('buyerName').value.trim() || document.getElementById('contactName').value.trim() || 'Unknown';
-    const buyerEmail = document.getElementById('buyerEmail').value.trim() || document.getElementById('contactEmail').value.trim() || 'Unknown';
-    text += `${type.toUpperCase()}\\nCustomer: ${buyerName} (${buyerEmail})\\n\\nMessage:\\n${msg}`;
-  }
-  document.getElementById('sellerOrderDetails').value = text;
-  document.getElementById('sellerCustomerName').value = lastOrderDetails ? lastOrderDetails.name : (document.getElementById('buyerName').value || document.getElementById('contactName').value || '');
-  document.getElementById('sellerCustomerEmail').value = lastOrderDetails ? lastOrderDetails.email : (document.getElementById('buyerEmail').value || document.getElementById('contactEmail').value || '');
-  document.getElementById('sellerNoticeType').value = type;
-  try { document.getElementById('sellerForm').submit(); } catch(e){ console.warn('submit failed', e); }
-
-  pushSiteNotification(modalActionType === 'refund' ? 'Refund Requested' : 'Message Sent', 'Seller has been notified via email.', 'info');
-  closeModal();
-  alert('Your request was submitted. Seller will contact you by email.');
-}
-
-/* View last order */
-function viewLastOrder(){
-  if(!lastOrderDetails){ alert('No recent order found.'); return; }
-  alert(`Order ID: ${lastOrderDetails.id}\\n\\n` + lastOrderDetails.details);
-}
-
-/* Cancel current cart or clear, with option to request cancellation if there's a last order */
-function cancelCartOrOrder(){
-  if(Object.keys(cart).length > 0){
-    if(confirm('Clear cart now?')){ cart={}; renderCart(); pushSiteNotification('Cart cleared','Your cart was emptied.','info'); }
-    return;
-  }
-  // if cart empty but lastOrder exists, offer to cancel that order
-  if(lastOrderDetails){
-    if(confirm('Do you want to request cancellation for your last order?')) cancelOrderAfterCheckout();
-    return;
-  }
-  alert('Nothing to cancel.');
+/* Place order: save to localStorage, submit to FormSubmit automatically */
+function placeOrder(e){
+  e.preventDefault();
+  fillHiddenOrderFields();
+  const form = e.target;
+  const fd = new FormData(form);
+  // append cart items
+  fd.append('order_items', generateOrderSummaryString());
+  fd.append('order_date', new Date().toLocaleString());
+  // Save order locally
+  const order = {
+    id: 'ORD' + Date.now(),
+    date: new Date().toISOString(),
+    buyer_name: fd.get('buyer_name'),
+    buyer_email: fd.get('buyer_email'),
+    buyer_phone: fd.get('buyer_phone'),
+    buyer_address: fd.get('buyer_address'),
+    payment_method: fd.get('payment_method'),
+    voucher: fd.get('voucher_code') || '',
+    items: readCart(),
+    summary: fd.get('order_items'),
+    total: fd.get('order_total'),
+    status: 'To Ship'
+  };
+  saveOrderLocally(order);
+  // Create a temporary form to submit to FormSubmit (so user receives email and you get it)
+  const tmp = document.createElement('form');
+  tmp.style.display='none';
+  tmp.method = 'POST';
+  tmp.action = 'https://formsubmit.co/lacsimarrainier24@gmail.com';
+  // subject and autoresponse
+  tmp.innerHTML = `
+    <input type="hidden" name="_subject" value="New BuildSmartPH Order — ${escapeHtml(order.id)}">
+    <input type="hidden" name="_autoresponse" value="Thank you for ordering from BuildSmartPH! Your order has been received and is being processed. You’ll receive an update once it’s shipped.">
+    <input type="hidden" name="_template" value="box">
+  `;
+  // fill fields
+  tmp.appendChild(createHidden('Buyer Name', order.buyer_name));
+  tmp.appendChild(createHidden('Buyer Email', order.buyer_email));
+  tmp.appendChild(createHidden('Phone', order.buyer_phone));
+  tmp.appendChild(createHidden('Address', order.buyer_address));
+  tmp.appendChild(createHidden('Payment Method', order.payment_method));
+  tmp.appendChild(createHidden('Voucher', order.voucher));
+  tmp.appendChild(createHidden('Order ID', order.id));
+  tmp.appendChild(createHidden('Order Summary', order.summary));
+  tmp.appendChild(createHidden('Order Total', `₱${formatNum(order.total)}`));
+  document.body.appendChild(tmp);
+  // show success popup & submit behind the scenes
+  showSuccess(order.id);
+  // submit to FormSubmit
+  tmp.submit();
+  // clear cart
+  localStorage.removeItem(CART_KEY);
+  writeCart([]);
+  // close checkout overlay
+  closeCheckout();
+  // refresh orders UI
+  showOrdersSection(); // show orders
 }
 
-/* simulate shipping - dev helper */
-function simulateShipLastOrder(){
-  if(!lastOrderDetails){ alert('No order to mark shipped'); return; }
-  lastOrderDetails.status = 'shipped';
-  const el = document.getElementById('orderStatusText'); if(el) el.innerText = lastOrderDetails.status;
-  pushSiteNotification('Order Marked Shipped','Order has been marked as shipped (demo).','info');
+function createHidden(name, value){
+  const el = document.createElement('input');
+  el.type='hidden'; el.name = name; el.value = value || ''; return el;
 }
 
-/* ---------------------------
-   Contact form (FormSubmit)
-   --------------------------- */
-function submitContact(ev){
-  ev.preventDefault();
-  const name = document.getElementById('contactName').value.trim();
-  const email = document.getElementById('contactEmail').value.trim();
-  const phone = document.getElementById('contactPhone').value.trim();
-  const message = document.getElementById('contactMessage').value.trim();
-  if(!name || !email || !message) { alert('Please fill name, email, and message.'); return; }
-
-  // prepare email to seller
-  const text = `CONTACT MESSAGE\\nFrom: ${name} (${email})\\nPhone: ${phone}\\n\\nMessage:\\n${message}`;
-  document.getElementById('sellerOrderDetails').value = text;
-  document.getElementById('sellerCustomerName').value = name;
-  document.getElementById('sellerCustomerEmail').value = email;
-  document.getElementById('sellerNoticeType').value = 'contact';
-  try { document.getElementById('sellerForm').submit(); } catch(e){ console.warn('contact submit failed', e); }
-
-  pushSiteNotification('Message Sent','We sent your message to seller. They will reply via email.', 'info');
-  alert('Message sent. Seller will contact you via email.');
-  document.getElementById('contactForm').reset();
+/* Save order in localStorage orders list */
+function saveOrderLocally(order){
+  const all = readOrders();
+  all.unshift(order);
+  localStorage.setItem(ORDERS_KEY, JSON.stringify(all));
+  showToast('Order saved to My Orders');
+  updateOrdersUI();
 }
+function readOrders(){ try{ return JSON.parse(localStorage.getItem(ORDERS_KEY)) || []; }catch(e){return []} }
 
-/* ---------------------------
-   Chat assistant (professional)
-   --------------------------- */
-function openChat(){ document.getElementById('chatWindow').style.display='flex'; document.getElementById('chatBubble').style.display='none'; appendChat('bot', 'Hello — I am BuildSmart Assistant. I can help with products, placing orders, refunds, returns, cancellations, and shipping. How can I help you today?'); }
-function closeChat(){ document.getElementById('chatWindow').style.display='none'; document.getElementById('chatBubble').style.display='flex'; }
-function appendChat(who, msg){
-  const el = document.createElement('div'); el.className = 'msg ' + (who==='me' ? 'me' : '');
-  el.innerHTML = `<div class="bubble">${escapeHtml(msg)}</div>`;
-  document.getElementById('chatBody').appendChild(el);
-  document.getElementById('chatBody').scrollTop = document.getElementById('chatBody').scrollHeight;
+/* ========= Orders UI ========= */
+function showOrdersSection(){ document.getElementById('ordersSection').style.display='block'; scrollToSection('ordersSection'); updateOrdersUI(); }
+function updateOrdersUI(filter='all'){
+  const list = document.getElementById('ordersList'); list.innerHTML = '';
+  const orders = readOrders();
+  const filtered = orders.filter(o=>{
+    if(filter==='all') return true;
+    if(filter==='toship') return o.status==='To Ship';
+    if(filter==='toreceive') return o.status==='To Receive';
+    if(filter==='completed') return o.status==='Completed';
+    if(filter==='cancelled') return o.status==='Cancelled';
+    if(filter==='refunded') return o.status==='Refunded';
+    return true;
+  });
+  if(filtered.length===0){ list.innerHTML = '<div class="muted">No orders yet.</div>'; return; }
+  filtered.forEach(o=>{
+    const card = document.createElement('div'); card.className='order-card';
+    card.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><strong>${escapeHtml(o.id)}</strong> · <span class="muted">${new Date(o.date).toLocaleString()}</span></div>
+        <div style="font-weight:800;color:${o.status==='Cancelled'? 'var(--danger)' : o.status==='Refunded'? 'var(--danger)' : o.status==='Completed' ? 'green' : 'var(--accent)'}">${o.status}</div>
+      </div>
+      <div style="margin-top:8px;white-space:pre-wrap">${escapeHtml(o.summary)}</div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        ${o.status==='To Ship' ? `<button class="btn-primary" onclick="markAsShipped('${o.id}')">Mark Shipped</button>` : ''}
+        ${o.status==='To Ship' ? `<button class="btn-ghost" onclick="cancelOrder('${o.id}')">Cancel</button>` : ''}
+        ${o.status==='To Receive' ? `<button class="btn-primary" onclick="markAsReceived('${o.id}')">Mark Received</button>` : ''}
+        ${o.status!=='Cancelled' && o.status!=='Refunded' ? `<button class="btn-ghost" onclick="requestRefund('${o.id}')">Request Refund</button>` : ''}
+        <button class="btn-ghost" onclick="printOrderById('${o.id}')">Print</button>
+      </div>
+    `;
+    list.appendChild(card);
+  });
 }
-function quick(topic){
-  if(topic==='shipping') appendChat('bot', 'Shipping: Standard (Free), Express (₱100), Store Pickup (₱50). Select in cart.');
-  else if(topic==='payment') appendChat('bot', 'Payment: Credit Card, GCash, PayPal, Cash on Delivery (COD).');
-  else if(topic==='refund') appendChat('bot', 'To request refund/return: open Cart → Request Refund / Return. Provide reason & Order ID.');
-  else if(topic==='cancel') appendChat('bot', 'To cancel after checkout: use Request Cancel in the Cart (before shipment).');
+function switchOrderTab(tab){ document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.tab').forEach(t=>{ if(t.dataset.tab===tab) t.classList.add('active')}); updateOrdersUI(tab); }
+
+/* Order actions */
+function findOrder(id){ const all = readOrders(); return all.find(o=>o.id===id); }
+function updateOrderStatus(id, newStatus){
+  const all = readOrders();
+  const idx = all.findIndex(o=>o.id===id);
+  if(idx===-1) return;
+  all[idx].status = newStatus;
+  localStorage.setItem(ORDERS_KEY, JSON.stringify(all));
+  updateOrdersUI();
+  showToast(`Order ${id} → ${newStatus}`);
 }
+function cancelOrder(id){ if(!confirm('Cancel this order?')) return; updateOrderStatus(id,'Cancelled'); }
+function requestRefund(id){ if(!confirm('Request refund for this order?')) return; updateOrderStatus(id,'Refunded'); }
+function markAsShipped(id){ updateOrderStatus(id,'To Receive'); }
+function markAsReceived(id){ updateOrderStatus(id,'Completed'); }
 
-/* Chat input handling (basic intent parsing) */
-function handleChat(){
-  const raw = (document.getElementById('chatInput').value||'').trim();
-  if(!raw) return;
-  appendChat('me', raw);
-  document.getElementById('chatInput').value = '';
-
-  const input = raw.toLowerCase();
-
-  if(input.match(/\\b(add|buy|purchase|order)\\b/)){
-    for(const key of Object.keys(productInfo)){
-      if(input.includes(key) || input.includes(productInfo[key].name.split(' ')[0].toLowerCase())){
-        const prod = productInfo[key];
-        addToCart(prod.name, 1, prod.price, prod.img);
-        appendChat('bot', `Added 1 × ${prod.name} to cart. Open cart to checkout.`);
-        return;
-      }
-    }
-    appendChat('bot', 'Which product would you like? Try: BuildMate, EcoBricks, HydroShield.');
-    return;
-  }
-
-  if(input.includes('refund') || input.includes('return')){ openModal('refund'); appendChat('bot','Refund dialog opened. Please describe the issue and submit.'); return; }
-  if(input.includes('cancel order') || input === 'cancel'){ cancelOrderAfterCheckout(); appendChat('bot','Cancellation request sent (if applicable).'); return; }
-  if(input.includes('status') || input.includes('order status') || input.includes('my order')){ if(!lastOrderDetails) appendChat('bot','No recent order recorded.'); else appendChat('bot', `Order ID: ${lastOrderDetails.id}. Status: ${lastOrderDetails.status}.`); return; }
-  if(input.includes('receipt') || input.includes('view receipt')){ viewLastOrder(); appendChat('bot','Displayed receipt.') ; return; }
-
-  if(input.includes('shipping')){ quick('shipping'); return; }
-  if(input.includes('payment')){ quick('payment'); return; }
-
-  // product info
-  for(const k of Object.keys(productInfo)){
-    if(input.includes(k) || input.includes(productInfo[k].name.split(' ')[0].toLowerCase())){
-      const p = productInfo[k];
-      appendChat('bot', `${p.name} — ${p.desc} Price: ₱${p.price.toLocaleString()}`);
-      return;
+/* ========= Chat Assistant ========= */
+function toggleChat(){ const box = document.getElementById('chatBox'); box.classList.toggle('open'); box.setAttribute('aria-hidden', !box.classList.contains('open')); document.getElementById('chatInput').focus(); }
+function chatHandleKey(e){ if(e.key==='Enter'){ const q = e.target.value.trim(); if(!q) return; appendChat('You', q); const reply = generateChatReply(q); setTimeout(()=> appendChat('Assistant', reply), 600); e.target.value=''; } }
+function appendChat(who, text){ const body = document.getElementById('chatBody'); const node = document.createElement('div'); node.style.marginBottom='8px'; node.innerHTML = `<strong>${who}:</strong> ${escapeHtml(text)}`; body.appendChild(node); body.scrollTop = body.scrollHeight; }
+function generateChatReply(q){
+  const s = q.toLowerCase();
+  if(s.includes('how') && s.includes('order')) return 'To order: add items to cart, open Checkout, fill your details and Place Order. We will email you confirmation.';
+  if(s.includes('cancel')) return 'To cancel: open My Orders, find your order and press Cancel (if still cancellable). If shipped, contact support.';
+  if(s.includes('refund') || s.includes('return')) return 'Refunds: request via My Orders or email us at lacsimarrainier24@gmail.com. Damaged items are eligible for refund within 7 days after delivery.';
+  if(s.includes('track')||s.includes('tracking')) return 'Tracking: we will email tracking code when we ship. Use that code on the courier website.';
+  if(s.includes('payment')||s.includes('pay')) return 'Payment methods: Cash on Delivery, GCash, Credit/Debit card (input details), PayPal.';
+  // product-specific queries: check product names
+  for(const p of PRODUCTS){
+    if(s.includes(p.title.split('—')[0].toLowerCase()) || s.includes(p.title.toLowerCase().split('—')[0].trim())){
+      return `${p.title} — ${p.desc}\nPrice: ₱${formatNum(p.price)}\nKey features: ${p.features.slice(0,4).join(', ')}.`;
     }
   }
-
-  appendChat('bot', 'Sorry — I did not understand. Try: "Add BuildMate to cart", "Request refund", "Cancel order", or ask about shipping/payment.');
+  // default
+  return "I'm BuildSmart Assistant — I can help with ordering, cancelling, refunds, tracking, and product details. Try: 'How to order', 'HydroShield details', 'Track my order'.";
 }
 
-/* ---------------------------
-   Product catalog for chat
-   --------------------------- */
-const productInfo = {
-  buildmate: { name: 'BuildMate™', price: 1999, desc: 'Smart construction tool', img: 'assets/buildmate.jpg' },
-  ecobricks: { name: 'EcoBricks+', price: 799, desc: 'Sustainable bricks', img: 'assets/ecobricks.jpg' },
-  hydroshield: { name: 'HydroShield™', price: 1499, desc: 'Water-resistant coating', img: 'assets/hydroshield.jpg' },
-};
+/* ========= Misc / Init ========= */
+function scrollToSection(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+function showSuccess(orderId){
+  const s = document.getElementById('successPopup'); s.classList.add('open'); s.style.display='block';
+  // auto hide after 3.2s
+  setTimeout(()=>{ s.classList.remove('open'); s.style.display='none'; }, 3200);
+}
 
-/* ---------------------------
-   Other helpers & startup
-   --------------------------- */
-function toggleCart(open){ const panel = document.getElementById('cartPanel'); if(open===true) panel.classList.add('open'); else if(open===false) panel.classList.remove('open'); else panel.classList.toggle('open'); }
-function viewLastOrder(){ if(!lastOrderDetails){ alert('No recent order recorded.'); return; } alert(`Order ID: ${lastOrderDetails.id}\\n\\n` + lastOrderDetails.details); }
-function submitSellerTest(){ try { document.getElementById('sellerForm').submit(); } catch(e){ console.warn(e); } }
+// printing
+let lastPrintedOrderId=null;
+function printOrder(){ // print last order saved
+  const orders = readOrders(); if(orders.length===0) return alert('No orders to print'); const o = orders[0]; lastPrintedOrderId=o.id; printOrderHTML(o); }
+function printOrderById(id){ const o = findOrder(id); if(!o) return alert('Order not found'); printOrderHTML(o); }
+function printOrderHTML(o){
+  const w = window.open('', '_blank');
+  const html = `<html><head><title>Order ${o.id}</title><style>body{font-family:Inter,Arial;padding:18px}h1{color:#0d6efd}</style></head><body><h1>BuildSmart PH — Order ${o.id}</h1><p><strong>Date:</strong> ${new Date(o.date).toLocaleString()}</p><p><strong>Name:</strong> ${escapeHtml(o.buyer_name)}</p><p><strong>Address:</strong> ${escapeHtml(o.buyer_address)}</p><pre>${escapeHtml(o.summary)}</pre><p><strong>Total:</strong> ₱${formatNum(o.total)}</p></body></html>`;
+  w.document.write(html); w.document.close(); w.print();
+}
 
-/* Init */
-renderCart();
-appendChat('bot','Hello — I am BuildSmart Assistant. How can I help?');
+/* Save draft (just keep cart) */
+function saveDraft(){ showToast('Draft saved (cart remains)'); }
 
+/* simple helpers for checkout UI */
+function togglePaymentFields(){
+  const method = document.getElementById('pmethod').value;
+  document.querySelectorAll('.pay-gcash,.pay-card,.pay-paypal').forEach(el=>el.style.display='none');
+  if(method==='gcash') document.querySelectorAll('.pay-gcash').forEach(el=>el.style.display='block');
+  if(method==='card') document.querySelectorAll('.pay-card').forEach(el=>el.style.display='block');
+  if(method==='paypal') document.querySelectorAll('.pay-paypal').forEach(el=>el.style.display='block');
+}
+
+/* generate checkout hidden fields periodically */
+setInterval(()=>{ try{ if(document.getElementById('checkoutOverlay').classList.contains('open')) fillHiddenOrderFields(); }catch(e){} },800);
+
+/* init page */
+window.addEventListener('load', ()=>{
+  renderProducts();
+  // restore cart
+  const cart = readCart();
+  if(cart.length) renderCart();
+  updateCartCount();
+  updateOrdersUI();
+});
 </script>
 </body>
 </html>
-               
