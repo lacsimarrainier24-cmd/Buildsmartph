@@ -6,874 +6,200 @@
 <title>BuildSmart PH — Store</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#f5f7fb; --card:#fff; --muted:#6b7280; --blue:#2563eb;
-    --accent:#0d6efd; --success:#198754; --danger:#ff4d4f;
-    --radius:12px; --shadow: 0 8px 28px rgba(20,30,60,0.06);
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;color:#0b1220;background:var(--bg);-webkit-font-smoothing:antialiased}
-  a{color:var(--blue)}
-  header{background:linear-gradient(90deg,var(--accent),#1e90ff); color:#fff; padding:14px 18px; position:sticky; top:0; z-index:120; box-shadow:0 4px 14px rgba(2,6,23,0.08)}
-  .header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .brand{font-weight:800; font-size:20px; letter-spacing:0.2px}
-  .nav{display:flex;gap:14px;align-items:center}
-  .nav a{color:rgba(255,255,255,0.95); text-decoration:none; font-weight:600}
-  .top-actions{display:flex;gap:10px;align-items:center}
-  .cart-btn{position:relative;background:transparent;border:none;color:#fff;cursor:pointer;font-weight:800;font-size:16px}
-  .cart-count{position:absolute;right:-8px;top:-8px;background:var(--danger);color:#fff;padding:4px 8px;border-radius:999px;font-weight:800;font-size:12px;box-shadow:0 6px 18px rgba(0,0,0,0.12)}
-  main.container{max-width:1200px;margin:22px auto;padding:0 18px}
-  .hero{background:linear-gradient(180deg, rgba(37,99,235,0.06), transparent);padding:18px;border-radius:12px;margin-bottom:18px}
-  .hero h1{margin:0;font-size:20px}
-  .hero p{margin:6px 0 0;color:var(--muted)}
-
-  /* Grid */
-  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-  @media(max-width:900px){ .grid{grid-template-columns:1fr} }
-
-  /* Product Card */
-  .card{background:var(--card);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;transition:transform .28s ease, box-shadow .28s ease;will-change:transform}
-  .card:hover{transform:translateY(-6px);box-shadow:0 12px 30px rgba(2,6,23,0.12)}
-  .card-top{display:flex;gap:14px;padding:14px}
-  .imgwrap{width:42%;max-width:220px;background:#111;padding:12px;border-radius:8px;display:flex;align-items:center;justify-content:center}
-  .imgwrap img{max-width:100%;height:140px;object-fit:contain;border-radius:6px;background:#fff}
-  .meta{flex:1}
-  .category{color:var(--accent);font-weight:700;font-size:13px;margin-bottom:6px}
-  .title{margin:0;font-size:16px}
-  .rating{color:#f6b93b;font-weight:700;margin:6px 0;font-size:13px}
-  .price-row{display:flex;align-items:baseline;gap:12px;margin-top:6px;flex-wrap:wrap}
-  .price{font-weight:900;font-size:18px}
-  .old{color:var(--muted);text-decoration:line-through;font-size:13px}
-  .desc{color:var(--muted);font-size:13px;margin-top:8px}
-
-  /* .Show-Details (collapsible) */
-  .details{border-top:1px solid rgba(11,17,36,0.04);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
-  .toggle{background:none;border:none;color:var(--accent);font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
-  .details-content{overflow:hidden;max-height:0;transition:max-height .36s ease,padding .2s ease}
-  .details-content.open{padding-top:8px;max-height:1000px}
-  .features ul{margin:6px 0 0 18px;color:var(--muted)}
-  .specs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
-  .spec{background:var(--bg);padding:8px;border-radius:8px;font-size:13px;color:var(--muted)}
-   . add cart button
-  /* purchase bar inside details */
-  .purchase{display:flex;gap:10px;align-items:center;margin-top:8px}
-  .qty{display:flex;align-items:center;gap:8px}
-  .qty button{width:34px;height:34px;border-radius:8px;border:1px solid rgba(11,17,36,0.06);background:#fff;cursor:pointer;font-weight:700}
-  .qty .value{min-width:28px;text-align:center;font-weight:800}
-  .add{flex:1;padding:10px;border-radius:10px;background:var(--accent);color:#fff;border:none;font-weight:800;cursor:pointer}
-.add-cart
-  /* add Cart Drawer */
-  .cart-drawer{position:fixed;right:-440px;top:0;width:420px;height:100%;background:var(--card);box-shadow:-8px 0 30px rgba(2,6,23,0.16);transition:right .42s cubic-bezier(.2,.9,.26,1.05);z-index:1400;display:flex;flex-direction:column}
-  .cart-drawer.open{right:0}
-  .cart-head{display:flex;align-items:center;justify-content:space-between;padding:18px;border-bottom:1px solid rgba(11,17,36,0.04)}
-  .cart-list{padding:12px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:12px}
-  .cart-row{display:flex;gap:10px;align-items:center}
-  .cart-row img{width:64px;height:48px;object-fit:cover;border-radius:8px}
-  .cart-controls{display:flex;gap:8px;align-items:center}
-  .cart-footer{padding:16px;border-top:1px solid rgba(11,17,36,0.04);display:flex;flex-direction:column;gap:8px}
-  .btn-primary{background:var(--accent);color:#fff;padding:12px;border-radius:10px;border:none;font-weight:800;cursor:pointer}
-  .btn-ghost{background:#fff;border:1px solid rgba(11,17,36,0.06);padding:10px;border-radius:8px;cursor:pointer}
-
-  /* Checkout overlay */
-  .overlay{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(2,6,23,0.35);display:none;align-items:center;justify-content:center;z-index:1600}
-  .overlay.open{display:flex}
-  .checkout-card{background:var(--card);width:760px;max-width:95%;border-radius:12px;padding:18px;box-shadow:var(--shadow);transform:translateY(10px);animation:fadeInUp .36s ease}
-  @keyframes fadeInUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-  .checkout-grid{display:grid;grid-template-columns:1fr 360px;gap:18px}
-  @media(max-width:900px){ .checkout-card{padding:14px} .checkout-grid{grid-template-columns:1fr} .cart-drawer{width:100%} }
-
-  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
-  .field input,.field textarea,.field select{padding:10px;border-radius:8px;border:1px solid rgba(11,17,36,0.06);font-size:14px}
-
-  .small{font-size:13px;color:var(--muted)}
-
-  /* Chat */
-  .chat-toggle{position:fixed;right:18px;bottom:20px;background:var(--accent);color:#fff;border-radius:999px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 8px 26px rgba(2,6,23,0.18);z-index:1500;cursor:pointer}
-  .chat-box{position:fixed;right:18px;bottom:86px;width:340px;background:var(--card);border-radius:12px;box-shadow:var(--shadow);display:none;flex-direction:column;overflow:hidden;z-index:1500}
-  .chat-box.open{display:flex}
-  .chat-header{background:var(--accent);color:#fff;padding:12px;font-weight:800;text-align:center}
-  .chat-body{padding:10px;max-height:320px;overflow:auto}
-  .chat-input{display:flex;padding:10px;border-top:1px solid rgba(11,17,36,0.04)}
-  .chat-input input{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(11,17,36,0.06)}
-
-  /* success popup */
-  .success{position:fixed;left:50%;top:20%;transform:translateX(-50%);background:var(--card);padding:18px;border-radius:12px;box-shadow:var(--shadow);display:none;z-index:1700;text-align:center}
-  .success.open{display:block}
-  .success h3{color:var(--success)}
-
-  /* Orders page */
-  .orders-section{margin-top:18px;background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow)}
-  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-  .tab{padding:8px 12px;border-radius:999px;background:#f1f5f9;cursor:pointer;font-weight:700;color:var(--muted)}
-  .tab.active{background:var(--accent);color:#fff}
-
-  .order-card{background:#fff;border-radius:10px;padding:12px;box-shadow:0 6px 18px rgba(2,6,23,0.04);margin-bottom:10px}
-
-  /* small */
-  .muted{color:var(--muted);font-size:13px}
+  body { font-family: 'Inter', sans-serif; background:#f5f7fb; margin:0; padding:0; }
+  .container { max-width:1000px; margin:2rem auto; padding:1rem; }
+  h1,h2 { text-align:center; }
+  .products { display:grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap:1rem; }
+  .card { background:#fff; border-radius:12px; padding:1rem; box-shadow:0 4px 6px rgba(0,0,0,0.1); }
+  .card img { width:100%; border-radius:12px; }
+  button { cursor:pointer; padding:0.5rem 1rem; border:none; border-radius:8px; background:#4CAF50; color:#fff; margin-top:0.5rem; }
+  .collapse-content { display:none; margin-top:0.5rem; font-size:0.9rem; color:#555; }
+  .cart { margin-top:2rem; background:#fff; padding:1rem; border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.1); }
+  .cart-item { display:flex; justify-content:space-between; padding:0.5rem 0; border-bottom:1px solid #eee; }
+  .track-order-section { margin-top:2rem; background:#fff; padding:1rem; border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.1); }
+  .order-card { background:#f9f9f9; padding:1rem; border-radius:12px; margin-top:1rem; }
+  .progress-bar { display:flex; justify-content:space-between; margin-top:0.5rem; }
+  .progress-step { flex:1; text-align:center; font-size:0.75rem; padding:0.25rem; border-radius:8px; background:#ddd; margin:0 0.1rem; }
+  .progress-step.active { background:#4CAF50; color:#fff; }
+  .cancel { background:#f44336; }
 </style>
 </head>
 <body>
+<div class="container">
+<h1>BuildSmart PH Store</h1>
 
-<!-- Header -->
-<header>
-  <div class="header-inner">
-    <div class="brand">BuildSmart PH</div>
-    <nav class="nav">
-      <a href="#products" onclick="scrollToSection('products')">Products</a>
-      <a href="#orders" onclick="showOrdersSection()">My Orders</a>
-      <a href="#contact" onclick="scrollToSection('contact')">Contact</a>
-    </nav>
-    <div class="top-actions">
-      <button class="cart-btn" onclick="toggleCart()" aria-label="Open cart">🛒 Cart <span id="cartCount" class="cart-count">0</span></button>
-    </div>
-  </div>
-</header>
-
-<!-- Main -->
-<main class="container">
-  <section class="hero" id="top-hero">
-    <h1>Professional Construction Technology</h1>
-    <p>Quality tools, materials and safety gear for modern civil engineering projects.</p>
-  </section>
-
-  <!-- Products -->
-  <section id="products">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <h2 style="margin:0">Products</h2>
-      <div class="small muted">Click details to expand features & specs</div>
-    </div>
-
-    <div class="grid" id="productGrid"></div>
-  </section>
-
-  <!-- Orders (hidden initially) -->
-  <section id="ordersSection" style="display:none; margin-top:18px">
-    <h2>My Orders</h2>
-    <div class="orders-section">
-      <div class="tabs" id="orderTabs">
-        <div class="tab active" data-tab="all" onclick="switchOrderTab('all')">All</div>
-        <div class="tab" data-tab="toship" onclick="switchOrderTab('toship')">To Ship</div>
-        <div class="tab" data-tab="toreceive" onclick="switchOrderTab('toreceive')">To Receive</div>
-        <div class="tab" data-tab="completed" onclick="switchOrderTab('completed')">Completed</div>
-        <div class="tab" data-tab="cancelled" onclick="switchOrderTab('cancelled')">Cancelled</div>
-        <div class="tab" data-tab="refunded" onclick="switchOrderTab('refunded')">Refunded</div>
-      </div>
-      <div id="ordersList"></div>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section id="contact" style="margin-top:18px">
-    <h3>Contact Us</h3>
-    <p class="muted">Email: <a href="mailto:lacsimarrainier24@gmail.com">lacsimarrainier24@gmail.com</a> · Phone: +63 XXX XXX XXXX</p>
-  </section>
-</main>
-
-<!-- Cart Drawer -->
-<aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
-  <div>
-    <div class="cart-head">
-      <div style="font-weight:800">Your Cart</div>
-      <button class="btn-ghost" onclick="toggleCart()">Close ✕</button>
-    </div>
-    <div class="cart-list" id="cartList"></div>
+<div class="products">
+  <!-- Product 1 -->
+  <div class="card">
+    <img src="buildmate.jpg" alt="BuildMate™">
+    <h3>BuildMate™ – Concrete Strength Tester</h3>
+    <button onclick="toggleDetails(0)">Details</button>
+    <div class="collapse-content" id="details-0">High precision tester for concrete strength in construction sites.</div>
+    <button onclick="addToCart('BuildMate™ – Concrete Strength Tester')">Add to Cart</button>
   </div>
 
-  <div class="cart-footer">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div class="small muted">Subtotal</div>
-      <div style="font-weight:800" id="cartSubtotal">₱0</div>
-    </div>
-    <div style="display:flex;gap:8px">
-      <button class="btn-ghost" onclick="clearCart()">Clear</button>
-      <button class="btn-primary" onclick="openCheckout()">Checkout</button>
-    </div>
+  <!-- Product 2 -->
+  <div class="card">
+    <img src="buildwear.jpg" alt="BuildWear™">
+    <h3>BuildWear™ – Safety and Field Gear</h3>
+    <button onclick="toggleDetails(1)">Details</button>
+    <div class="collapse-content" id="details-1">Durable safety gear for construction workers.</div>
+    <button onclick="addToCart('BuildWear™ – Safety and Field Gear')">Add to Cart</button>
   </div>
-</aside>
 
-<!-- Checkout Overlay -->
-<div class="overlay" id="checkoutOverlay" aria-hidden="true">
-  <div class="checkout-card" role="dialog" aria-modal="true">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <h3 style="margin:0">Checkout</h3>
-      <button class="btn-ghost" onclick="closeCheckout()">Close ✕</button>
-    </div>
+  <!-- Product 3 -->
+  <div class="card">
+    <img src="hydroshield.jpg" alt="HydroShield™">
+    <h3>HydroShield™ – Smart Drainage Panel System</h3>
+    <button onclick="toggleDetails(2)">Details</button>
+    <div class="collapse-content" id="details-2">Innovative drainage solution for efficient water flow.</div>
+    <button onclick="addToCart('HydroShield™ – Smart Drainage Panel System')">Add to Cart</button>
+  </div>
 
-    <div class="checkout-grid">
-      <!-- left: form -->
-      <form id="checkoutForm" style="padding-right:4px" onsubmit="placeOrder(event)">
-        <input type="hidden" name="_subject" value="New BuildSmartPH Order">
-        <input type="hidden" name="_autoresponse" value="Thank you for ordering from BuildSmartPH! Your order has been received and is being processed. You’ll receive an update once it’s shipped.">
-        <input type="hidden" name="_template" value="box">
-        <!-- buyer info -->
-        <div class="field">
-          <label>Full name</label>
-          <input type="text" name="buyer_name" required>
-        </div>
-        <div class="field">
-          <label>Email</label>
-          <input type="email" name="buyer_email" required>
-        </div>
-        <div class="field">
-          <label>Contact number</label>
-          <input type="text" name="buyer_phone" required placeholder="+63">
-        </div>
-        <div class="field">
-          <label>Shipping address</label>
-          <textarea name="buyer_address" rows="3" required></textarea>
-        </div>
+  <!-- Product 4 -->
+  <div class="card">
+    <img src="civimix.jpg" alt="CiviMix™">
+    <h3>CiviMix™ – Concrete Strength Additive</h3>
+    <button onclick="toggleDetails(3)">Details</button>
+    <div class="collapse-content" id="details-3">Additive to improve concrete durability and longevity.</div>
+    <button onclick="addToCart('CiviMix™ – Concrete Strength Additive')">Add to Cart</button>
+  </div>
 
-        <!-- payment methods -->
-        <div class="field">
-          <label>Payment method</label>
-          <select name="payment_method" id="pmethod" required onchange="togglePaymentFields()">
-            <option value="cod">Cash on Delivery</option>
-            <option value="gcash">GCash</option>
-            <option value="card">Credit / Debit Card</option>
-            <option value="paypal">PayPal</option>
-          </select>
-        </div>
-
-        <div id="payFields">
-          <!-- GCash -->
-          <div class="field pay-gcash" style="display:none">
-            <label>GCash number</label>
-            <input type="text" name="gcash_number" placeholder="0917xxxxxxx">
-          </div>
-
-          <!-- Card -->
-          <div class="field pay-card" style="display:none">
-            <label>Cardholder name</label>
-            <input type="text" name="card_name" placeholder="Name on card">
-            <label>Card number</label>
-            <input type="text" name="card_number" placeholder="1234 5678 9012 3456" maxlength="19">
-            <div style="display:flex;gap:8px">
-              <input type="text" name="card_exp" placeholder="MM/YY" style="flex:1">
-              <input type="text" name="card_cvv" placeholder="CVV" style="width:100px">
-            </div>
-          </div>
-
-          <!-- PayPal -->
-          <div class="field pay-paypal" style="display:none">
-            <label>PayPal email</label>
-            <input type="email" name="paypal_email" placeholder="your-paypal@example.com">
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Voucher code (optional)</label>
-          <input type="text" id="voucherInput" name="voucher_code" placeholder="ENTER VOUCHER">
-        </div>
-
-        <!-- hidden order summary will be filled by JS before submit -->
-        <input type="hidden" name="order_summary" id="orderSummaryInput">
-        <input type="hidden" name="order_total" id="orderTotalInput">
-
-        <div style="display:flex;gap:8px">
-          <button type="button" class="btn-ghost" onclick="saveDraft()">Save Draft</button>
-          <button type="submit" class="btn-primary">Place Order</button>
-        </div>
-      </form>
-
-      <!-- right: order preview -->
-      <aside style="border-left:1px solid rgba(11,17,36,0.04);padding-left:12px">
-        <div style="font-weight:800;margin-bottom:8px">Order Summary</div>
-        <div id="checkoutPreview" style="display:flex;flex-direction:column;gap:8px;max-height:420px;overflow:auto"></div>
-        <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center">
-          <div class="small muted">Subtotal</div>
-          <div style="font-weight:900" id="checkoutSubtotal">₱0</div>
-        </div>
-        <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center">
-          <div class="small muted">Discount</div>
-          <div id="checkoutDiscount" class="small muted">₱0</div>
-        </div>
-        <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center">
-          <div style="font-weight:800">Total</div>
-          <div style="font-weight:900" id="checkoutTotal">₱0</div>
-        </div>
-      </aside>
-    </div>
+  <!-- Product 5 -->
+  <div class="card">
+    <img src="ecobricks.jpg" alt="EcoBricks+™">
+    <h3>EcoBricks+™ – Recycled Construction Blocks</h3>
+    <button onclick="toggleDetails(4)">Details</button>
+    <div class="collapse-content" id="details-4">Eco-friendly construction blocks made from recycled materials.</div>
+    <button onclick="addToCart('EcoBricks+™ – Recycled Construction Blocks')">Add to Cart</button>
   </div>
 </div>
 
-<!-- Success popup -->
-<div class="success" id="successPopup" role="status" aria-live="polite">
-  <h3>✅ Order Confirmed!</h3>
-  <p>Thank you for shopping with <strong>BuildSmart PH</strong>.<br>We've sent a confirmation to your email.</p>
-  <div style="margin-top:12px"><button class="btn-primary" onclick="closeSuccess()">Close</button> <button class="btn-ghost" onclick="printOrder()">Print</button></div>
+<!-- Cart & Checkout -->
+<div class="cart">
+<h2>Cart</h2>
+<div id="cart-items"></div>
+
+<h3>Checkout</h3>
+<form id="checkoutForm" action="https://formsubmit.co/lacsimarrainier24@gmail.com" method="POST" target="_blank">
+  <input type="hidden" name="_subject" value="New Order from BuildSmart PH">
+  <input type="text" name="name" placeholder="Your Name" required><br><br>
+  <input type="email" name="email" placeholder="Your Email" required><br><br>
+  <select name="payment" id="payment" required>
+    <option value="">Select Payment Method</option>
+    <option value="COD">Cash on Delivery</option>
+    <option value="GCash">GCash</option>
+    <option value="Credit Card">Credit Card</option>
+  </select><br><br>
+  <div id="gcash-details" style="display:none;">
+    <input type="text" name="gcashNo" placeholder="GCash Number">
+  </div>
+  <div id="credit-details" style="display:none;">
+    <input type="text" name="ccNo" placeholder="Credit Card Number">
+  </div>
+  <input type="hidden" name="orderDetails" id="orderDetails">
+  <button type="submit" onclick="placeOrder(event)">Place Order</button>
+</form>
 </div>
 
-<!-- Chat -->
-<div class="chat-toggle" id="chatToggle" title="Chat with BuildSmart Assistant" onclick="toggleChat()">💬</div>
-<div class="chat-box" id="chatBox" aria-hidden="true">
-  <div class="chat-header">BuildSmart Assistant</div>
-  <div class="chat-body" id="chatBody">
-    <div style="font-weight:700;margin-bottom:6px">Hi — I'm BuildSmart Assistant. How can I help?</div>
-    <div class="small muted">Try: "How to order", "Cancel order", "Track my parcel", "Tell me about HydroShield"</div>
-  </div>
-  <div class="chat-input">
-    <input id="chatInput" placeholder="Type a question and press Enter" onkeypress="chatHandleKey(event)">
-  </div>
+<!-- Track Order Section -->
+<div class="track-order-section">
+<h2>Track Your Order</h2>
+<input type="text" id="track-id" placeholder="Enter Order ID">
+<button onclick="trackOrder()">Track</button>
+<div id="track-result" style="margin-top:1rem;"></div>
 </div>
 
-<footer style="margin-top:26px;background:#0b1220;color:#cbd5e1;padding:18px 16px;text-align:center">
-  © 2025 BuildSmart PH — Contact: <a href="mailto:lacsimarrainier24@gmail.com">lacsimarrainier24@gmail.com</a>
-</footer>
+</div>
 
 <script>
-/* ========= Product data ========= */
-const PRODUCTS = [
-  {
-    id: 'p-hydroshield',
-    title: 'HydroShield™ — Smart Drainage Panel System',
-    category: 'Drainage Systems',
-    rating: 4.6,
-    reviews: 89,
-    price: 1899,
-    old: 2299,
-    desc: 'Modular drainage panels that reduce flooding through efficient water control and smart design.',
-    features: ['Modular design', 'Easy installation', 'High water flow capacity', 'Durable materials', 'Smart water control', 'Eco-friendly'],
-    specs: { 'Panel Size': '1 m × 0.5 m', 'Flow Rate': '200 L/min per panel', 'Material': 'Recycled HDPE', 'Load Capacity': '5000 kg/m²', 'Installation': 'Interlocking system', 'Warranty': '10 years' },
-    stock: 25,
-    img: 'hydroshield.jpg'
-  },
-  {
-    id: 'p-civimix',
-    title: 'CiviMix™ — Concrete Strength Additive',
-    category: 'Additives',
-    rating: 4.7,
-    reviews: 203,
-    price: 599,
-    old: 799,
-    desc: 'Nano-additive that improves concrete strength and curing time for enhanced construction performance.',
-    features: ['Nano-technology formula', 'Improves strength by 30%', 'Faster curing time', 'Easy to mix', 'Compatible with all cement types', 'Long shelf life'],
-    specs: { 'Package Size': '25 kg bag', 'Dosage': '2–4% by cement weight', 'Strength Increase': 'Up to 30%', 'Curing Time Reduction': '40%', 'Shelf Life': '2 years', 'Storage': 'Dry conditions' },
-    stock: 200,
-    img: 'civimix.jpg'
-  },
-  {
-    id: 'p-ecobricks',
-    title: 'EcoBricks+™ — Recycled Construction Blocks',
-    category: 'Building Materials',
-    rating: 4.4,
-    reviews: 156,
-    price: 899,
-    old: 1199,
-    desc: 'Sustainable blocks made from recycled plastic and sand, perfect for eco-friendly construction projects.',
-    features: ['Made from recycled materials', 'Lightweight yet strong', 'Weather resistant', 'Easy to handle', 'Sustainable construction', 'Cost-effective'],
-    specs: { 'Dimensions': '200 × 100 × 60 mm', 'Weight': '1.8 kg / block', 'Compressive Strength': '15 MPa', 'Material': '70% recycled plastic, 30% sand', 'Fire Rating': 'Class A', 'Thermal Conductivity': '0.15 W/mK' },
-    stock: 500,
-    img: 'ecobricks.jpg'
-  },
-  {
-    id: 'p-buildmate',
-    title: 'BuildMate™ — Portable Concrete Strength Tester',
-    category: 'Testing Equipment',
-    rating: 4.8,
-    reviews: 124,
-    price: 2499,
-    old: 2999,
-    desc: 'Handheld device that measures compressive strength and temperature of concrete with high precision and reliability.',
-    features: ['Digital backlit LCD', 'Auto-calibration and memory storage', 'Compact, impact-resistant body', 'Rechargeable lithium battery (10 hrs)', 'Waterproof and dustproof (IP65)'],
-    specs: { 'Measurement Range': '10–100 MPa', 'Accuracy': '±0.1 MPa', 'Battery': '3.7V 2000mAh Li-ion', 'Weight': '1.2 kg', 'Material': 'Reinforced ABS' },
-    stock: 15,
-    img: 'buildmate.jpg'
-  },
-  {
-    id: 'p-buildwear',
-    title: 'BuildWear™ — Safety and Field Gear',
-    category: 'Safety Equipment',
-    rating: 4.5,
-    reviews: 178,
-    price: 799,
-    old: 999,
-    desc: 'Durable PPE and field accessories designed for construction professionals and safety compliance.',
-    features: ['Complete safety set', 'High-visibility colors', 'Comfortable fit', 'Durable materials', 'Meets safety standards'],
-    specs: { 'Set Includes': 'Hard hat, vest, gloves, glasses', 'Standards': 'ANSI / ISEA compliant', 'Sizes': 'S, M, L, XL, XXL', 'Material': 'High-vis polyester', 'Warranty': '1 year' },
-    stock: 45,
-    img: 'buildwear.jpg'
-  }
-];
+let cart = [];
+let orders = [];
 
-/* ========= Render products ========= */
-const productGrid = document.getElementById('productGrid');
-
-function renderProducts(){
-  productGrid.innerHTML = '';
-  PRODUCTS.forEach(p=>{
-    const card = document.createElement('article');
-    card.className = 'card';
-    card.innerHTML = `
-      <div class="card-top">
-        <div class="imgwrap"><img src="${p.img}" alt="${escapeHtml(p.title)}" onerror="this.onerror=null;this.src='https://via.placeholder.com/300x180?text=Product'"></div>
-        <div class="meta">
-          <div class="category">${escapeHtml(p.category)}</div>
-          <h3 class="title">${escapeHtml(p.title)}</h3>
-          <div class="rating">⭐️ ${p.rating} <span class="muted">(${p.reviews} reviews)</span></div>
-          <div class="price-row"><div class="price">₱${formatNum(p.price)}</div><div class="old">₱${formatNum(p.old)}</div></div>
-          <div class="desc">${escapeHtml(p.desc)}</div>
-        </div>
-      </div>
-
-      <div class="details">
-        <button class="toggle" onclick="toggleDetails(this)">View Details ▼</button>
-
-        <div class="details-content" aria-hidden="true">
-          <div class="features"><strong>Key Features</strong>
-            <ul>${p.features.map(f=>`<li>${escapeHtml(f)}</li>`).join('')}</ul>
-          </div>
-
-          <div style="margin-top:8px"><strong>Specifications</strong>
-            <div class="specs">${Object.entries(p.specs).map(([k,v])=>`<div class="spec"><strong>${escapeHtml(k)}:</strong><div class="muted">${escapeHtml(v)}</div></div>`).join('')}</div>
-          </div>
-
-          <div class="muted" style="margin-top:8px">Stock: ${p.stock} available</div>
-
-          <div class="purchase">
-            <div class="qty" aria-label="quantity selector">
-              <button onclick="changeQty('${p.id}', -1)">−</button>
-              <div class="value" id="qty-${p.id}">1</div>
-              <button onclick="changeQty('${p.id}', 1)">+</button>
-            </div>
-            <button class="add" onclick="addToCart('${p.id}')">🛒 Add to Cart — ₱${formatNum(p.price)}</button>
-          </div>
-        </div>
-      </div>
-    `;
-    productGrid.appendChild(card);
-  });
+// Toggle product details
+function toggleDetails(i){
+  const el = document.getElementById('details-'+i);
+  el.style.display = el.style.display==='block'?'none':'block';
 }
 
-/* ========= Utilities ========= */
-function formatNum(n){ return n.toLocaleString('en-PH'); }
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
-/* ========= Cart logic (localStorage) ========= */
-const CART_KEY = 'buildsmartph_cart_v4';
-function readCart(){ try{ return JSON.parse(localStorage.getItem(CART_KEY)) || []; }catch(e){return []} }
-function writeCart(c){ localStorage.setItem(CART_KEY, JSON.stringify(c)); updateCartCount(); renderCart(); }
-function updateCartCount(){ const c = readCart(); const total = c.reduce((s,i)=>s+i.qty,0); document.getElementById('cartCount').textContent = total; }
-function findProduct(id){ return PRODUCTS.find(p=>p.id===id); }
-
-function addToCart(pid){
-  const qtyEl = document.getElementById(`qty-${pid}`);
-  const qty = qtyEl ? parseInt(qtyEl.textContent||'1',10) : 1;
-  const prod = findProduct(pid);
-  if(!prod) return;
-  const cart = readCart();
-  const existing = cart.find(i=>i.id===pid);
-  if(existing){
-    if(existing.qty + qty > prod.stock){ showToast('Not enough stock'); return; }
-    existing.qty += qty;
-  } else {
-    if(qty > prod.stock){ showToast('Not enough stock'); return; }
-    cart.push({ id: pid, qty: qty });
-  }
-  writeCart(cart);
-  openCart(true);
-  showToast('Item added to cart');
+// Add to Cart
+function addToCart(product){
+  cart.push(product);
+  renderCart();
 }
 
-function changeQty(pid, delta){
-  const el = document.getElementById(`qty-${pid}`);
-  if(!el) return;
-  let v = parseInt(el.textContent||'1',10);
-  v = Math.max(1, v + delta);
-  el.textContent = v;
-}
-
-/* Cart drawer rendering */
+// Render Cart
 function renderCart(){
-  const list = document.getElementById('cartList');
-  const cart = readCart();
-  list.innerHTML = '';
-  let subtotal = 0;
-  cart.forEach(item=>{
-    const p = findProduct(item.id);
-    if(!p) return;
-    const row = document.createElement('div');
-    row.className = 'cart-row';
-    row.innerHTML = `
-      <img src="${p.img}" alt="${escapeHtml(p.title)}" onerror="this.onerror=null;this.src='https://via.placeholder.com/80x60?text=Img'">
-      <div style="flex:1">
-        <div style="font-weight:800">${escapeHtml(p.title)}</div>
-        <div class="muted">₱${formatNum(p.price)} × ${item.qty}</div>
-        <div style="margin-top:6px;display:flex;gap:8px;align-items:center">
-          <button class="btn-ghost" onclick="decreaseCartQty('${item.id}')">−</button>
-          <div class="small muted" id="cart-qty-${item.id}">${item.qty}</div>
-          <button class="btn-ghost" onclick="increaseCartQty('${item.id}')">+</button>
-          <button class="btn-ghost" style="margin-left:8px" onclick="removeFromCart('${item.id}')">Remove</button>
-        </div>
-      </div>
-      <div style="font-weight:800">₱${formatNum(p.price * item.qty)}</div>
-    `;
-    list.appendChild(row);
-    subtotal += p.price * item.qty;
+  const container = document.getElementById('cart-items');
+  container.innerHTML='';
+  cart.forEach((item,i)=>{
+    container.innerHTML += `<div class="cart-item">${item} <button onclick="removeItem(${i})">Remove</button></div>`;
   });
-  document.getElementById('cartSubtotal').textContent = `₱${formatNum(subtotal)}`;
-  // update preview if checkout open
-  updateCheckoutPreview();
 }
 
-/* cart qty helpers */
-function increaseCartQty(id){ const cart = readCart(); const item = cart.find(i=>i.id===id); if(!item) return; const p = findProduct(id); if(item.qty+1>p.stock){ showToast('Not enough stock'); return; } item.qty++; writeCart(cart); }
-function decreaseCartQty(id){ const cart = readCart(); const item = cart.find(i=>i.id===id); if(!item) return; if(item.qty<=1) return; item.qty--; writeCart(cart); }
-function removeFromCart(id){ let cart = readCart(); cart = cart.filter(i=>i.id!==id); writeCart(cart); }
-function clearCart(){ if(!confirm('Clear cart?')) return; localStorage.removeItem(CART_KEY); writeCart([]); }
-
-/* open/close cart */
-function toggleCart(){ const el = document.getElementById('cartDrawer'); el.classList.toggle('open'); el.setAttribute('aria-hidden', !el.classList.contains('open')); }
-function openCart(noFocus){ const el = document.getElementById('cartDrawer'); el.classList.add('open'); el.setAttribute('aria-hidden','false'); if(!noFocus) document.getElementById('cartList').focus(); }
-
-/* Toast */
-let toastTimer=0;
-function showToast(msg, ms=1600){
-  const t = document.getElementById('__toast_el');
-  if(!t){
-    const n = document.createElement('div'); n.id='__toast_el';
-    n.style= "position:fixed;left:50%;transform:translateX(-50%);bottom:26px;background:#111;color:#fff;padding:10px 14px;border-radius:8px;box-shadow:0 8px 26px rgba(0,0,0,0.24);z-index:1700";
-    document.body.appendChild(n);
-  }
-  const node = document.getElementById('__toast_el');
-  node.textContent = msg;
-  node.style.display='block';
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=> node.style.display='none', ms);
+// Remove item
+function removeItem(i){
+  cart.splice(i,1);
+  renderCart();
 }
 
-/* ========= Checkout & FormSubmit ========= */
-const ORDERS_KEY = 'buildsmartph_orders_v1';
+// Payment option toggle
+document.getElementById('payment').addEventListener('change', function(){
+  document.getElementById('gcash-details').style.display = this.value==='GCash'?'block':'none';
+  document.getElementById('credit-details').style.display = this.value==='Credit Card'?'block':'none';
+});
 
-function openCheckout(){
-  const cart = readCart();
-  if(cart.length===0){ showToast('Cart is empty'); return; }
-  document.getElementById('checkoutOverlay').classList.add('open'); document.getElementById('checkoutOverlay').setAttribute('aria-hidden','false');
-  updateCheckoutPreview();
-  fillHiddenOrderFields(); // in case
-}
-function closeCheckout(){ document.getElementById('checkoutOverlay').classList.remove('open'); document.getElementById('checkoutOverlay').setAttribute('aria-hidden','true'); }
-
-function updateCheckoutPreview(){
-  const preview = document.getElementById('checkoutPreview');
-  const cart = readCart();
-  preview.innerHTML = '';
-  let subtotal = 0;
-  cart.forEach(item=>{
-    const p = findProduct(item.id);
-    const row = document.createElement('div');
-    row.style.display='flex';row.style.justifyContent='space-between';row.style.alignItems='center';
-    row.innerHTML = `<div><div style="font-weight:700">${escapeHtml(p.title)}</div><div class="muted">x ${item.qty}</div></div><div>₱${formatNum(p.price*item.qty)}</div>`;
-    preview.appendChild(row);
-    subtotal += p.price * item.qty;
-  });
-  const voucher = document.getElementById('voucherInput') ? document.getElementById('voucherInput').value.trim() : '';
-  let discount = 0;
-  // simple voucher logic: "BUILD10" -> 10% off, "SHIPFREE" -> 100 shipping discount
-  if(voucher.toUpperCase()==='BUILD10') discount = Math.round(subtotal * 0.10);
-  document.getElementById('checkoutSubtotal').textContent = `₱${formatNum(subtotal)}`;
-  document.getElementById('checkoutDiscount').textContent = discount ? `₱${formatNum(discount)}` : '₱0';
-  const total = subtotal - discount;
-  document.getElementById('checkoutTotal').textContent = `₱${formatNum(total)}`;
-  // also update hidden fields
-  document.getElementById('orderTotalInput') && (document.getElementById('orderTotalInput').value = total);
-  return { subtotal, discount, total };
-}
-
-function fillHiddenOrderFields(){
-  const summary = generateOrderSummaryString();
-  const input = document.getElementById('orderSummaryInput');
-  const totalInput = document.getElementById('orderTotalInput');
-  if(input) input.value = summary;
-  if(totalInput){ const totals = updateCheckoutPreview(); totalInput.value = totals.total; }
-}
-
-/* Generate order summary text */
-function generateOrderSummaryString(){
-  const cart = readCart();
-  if(cart.length===0) return '';
-  let lines = [];
-  cart.forEach(item=>{
-    const p = findProduct(item.id);
-    lines.push(`${p.title} x${item.qty} — ₱${formatNum(p.price * item.qty)}`);
-  });
-  const totals = updateCheckoutPreview();
-  lines.push('');
-  lines.push(`Subtotal: ₱${formatNum(totals.subtotal)}`);
-  lines.push(`Discount: ₱${formatNum(totals.discount)}`);
-  lines.push(`Total: ₱${formatNum(totals.total)}`);
-  return lines.join('\n');
-}
-
-/* Place order: save to localStorage, submit to FormSubmit automatically */
+// Place order
 function placeOrder(e){
   e.preventDefault();
-  fillHiddenOrderFields();
-  const form = e.target;
-  const fd = new FormData(form);
-  // append cart items
-  fd.append('order_items', generateOrderSummaryString());
-  fd.append('order_date', new Date().toLocaleString());
-  // Save order locally
-  const order = {
-    id: 'ORD' + Date.now(),
-    date: new Date().toISOString(),
-    buyer_name: fd.get('buyer_name'),
-    buyer_email: fd.get('buyer_email'),
-    buyer_phone: fd.get('buyer_phone'),
-    buyer_address: fd.get('buyer_address'),
-    payment_method: fd.get('payment_method'),
-    voucher: fd.get('voucher_code') || '',
-    items: readCart(),
-    summary: fd.get('order_items'),
-    total: fd.get('order_total'),
-    status: 'To Ship'
-  };
-  saveOrderLocally(order);
-  // Create a temporary form to submit to FormSubmit (so user receives email and you get it)
-  const tmp = document.createElement('form');
-  tmp.style.display='none';
-  tmp.method = 'POST';
-  tmp.action = 'https://formsubmit.co/lacsimarrainier24@gmail.com';
-  // subject and autoresponse
-  tmp.innerHTML = `
-    <input type="hidden" name="_subject" value="New BuildSmartPH Order — ${escapeHtml(order.id)}">
-    <input type="hidden" name="_autoresponse" value="Thank you for ordering from BuildSmartPH! Your order has been received and is being processed. You’ll receive an update once it’s shipped.">
-    <input type="hidden" name="_template" value="box">
-  `;
-  // fill fields
-  tmp.appendChild(createHidden('Buyer Name', order.buyer_name));
-  tmp.appendChild(createHidden('Buyer Email', order.buyer_email));
-  tmp.appendChild(createHidden('Phone', order.buyer_phone));
-  tmp.appendChild(createHidden('Address', order.buyer_address));
-  tmp.appendChild(createHidden('Payment Method', order.payment_method));
-  tmp.appendChild(createHidden('Voucher', order.voucher));
-  tmp.appendChild(createHidden('Order ID', order.id));
-  tmp.appendChild(createHidden('Order Summary', order.summary));
-  tmp.appendChild(createHidden('Order Total', `₱${formatNum(order.total)}`));
-  document.body.appendChild(tmp);
-  // show success popup & submit behind the scenes
-  showSuccess(order.id);
-  // submit to FormSubmit
-  tmp.submit();
-  // clear cart
-  localStorage.removeItem(CART_KEY);
-  writeCart([]);
-  // close checkout overlay
-  closeCheckout();
-  // refresh orders UI
-  showOrdersSection(); // show orders
+  if(cart.length===0){alert("Cart is empty"); return;}
+  const name = document.querySelector('input[name="name"]').value;
+  const email = document.querySelector('input[name="email"]').value;
+  const payment = document.getElementById('payment').value;
+  const orderId = 'ORD'+Date.now();
+  const orderProducts = cart.join('<br>');
+  orders.push({id:orderId,product:orderProducts,status:'Pending',step:0,payment:payment});
+  document.getElementById('orderDetails').value=`Order ID: ${orderId}\nProducts: ${orderProducts}\nPayment: ${payment}\nCustomer: ${name}, ${email}`;
+  document.getElementById('checkoutForm').submit();
+  alert(`Order Placed! Your Order ID: ${orderId}`);
+  cart=[];
+  renderCart();
 }
 
-function createHidden(name, value){
-  const el = document.createElement('input');
-  el.type='hidden'; el.name = name; el.value = value || ''; return el;
-}
-
-/* Save order in localStorage orders list */
-function saveOrderLocally(order){
-  const all = readOrders();
-  all.unshift(order);
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(all));
-  showToast('Order saved to My Orders');
-  updateOrdersUI();
-}
-function readOrders(){ try{ return JSON.parse(localStorage.getItem(ORDERS_KEY)) || []; }catch(e){return []} }
-
-/* ========= Orders UI ========= */
-function showOrdersSection(){ document.getElementById('ordersSection').style.display='block'; scrollToSection('ordersSection'); updateOrdersUI(); }
-function updateOrdersUI(filter='all'){
-  const list = document.getElementById('ordersList'); list.innerHTML = '';
-  const orders = readOrders();
-  const filtered = orders.filter(o=>{
-    if(filter==='all') return true;
-    if(filter==='toship') return o.status==='To Ship';
-    if(filter==='toreceive') return o.status==='To Receive';
-    if(filter==='completed') return o.status==='Completed';
-    if(filter==='cancelled') return o.status==='Cancelled';
-    if(filter==='refunded') return o.status==='Refunded';
-    return true;
-  });
-  if(filtered.length===0){ list.innerHTML = '<div class="muted">No orders yet.</div>'; return; }
-  filtered.forEach(o=>{
-    const card = document.createElement('div'); card.className='order-card';
-    card.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div><strong>${escapeHtml(o.id)}</strong> · <span class="muted">${new Date(o.date).toLocaleString()}</span></div>
-        <div style="font-weight:800;color:${o.status==='Cancelled'? 'var(--danger)' : o.status==='Refunded'? 'var(--danger)' : o.status==='Completed' ? 'green' : 'var(--accent)'}">${o.status}</div>
+// Track order
+function trackOrder(){
+  const id = document.getElementById('track-id').value.trim();
+  const resultDiv = document.getElementById('track-result');
+  if(!id){resultDiv.innerHTML="Please enter an Order ID"; return;}
+  const order = orders.find(o => o.id === id);
+  if(!order){resultDiv.innerHTML="Order not found"; return;}
+  resultDiv.innerHTML = `
+    <div class="order-card">
+      <div class="order-header">
+        <div class="order-id">Order ID: ${order.id}</div>
+        ${order.status==='Pending'?'<button class="cancel" onclick="cancelOrder(\''+order.id+'\')">Cancel</button>':''}
       </div>
-      <div style="margin-top:8px;white-space:pre-wrap">${escapeHtml(o.summary)}</div>
-      <div style="display:flex;gap:8px;margin-top:10px">
-        ${o.status==='To Ship' ? `<button class="btn-primary" onclick="markAsShipped('${o.id}')">Mark Shipped</button>` : ''}
-        ${o.status==='To Ship' ? `<button class="btn-ghost" onclick="cancelOrder('${o.id}')">Cancel</button>` : ''}
-        ${o.status==='To Receive' ? `<button class="btn-primary" onclick="markAsReceived('${o.id}')">Mark Received</button>` : ''}
-        ${o.status!=='Cancelled' && o.status!=='Refunded' ? `<button class="btn-ghost" onclick="requestRefund('${o.id}')">Request Refund</button>` : ''}
-        <button class="btn-ghost" onclick="printOrderById('${o.id}')">Print</button>
+      <div class="order-products">${order.product}</div>
+      <div class="progress-bar">
+        <div class="progress-step ${order.step>=0?'active':''}">Pending</div>
+        <div class="progress-step ${order.step>=1?'active':''}">Shipped</div>
+        <div class="progress-step ${order.step>=2?'active':''}">Out for Delivery</div>
+        <div class="progress-step ${order.step>=3?'active':''}">Delivered</div>
       </div>
-    `;
-    list.appendChild(card);
-  });
-}
-function switchOrderTab(tab){ document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.tab').forEach(t=>{ if(t.dataset.tab===tab) t.classList.add('active')}); updateOrdersUI(tab); }
-
-/* Order actions */
-function findOrder(id){ const all = readOrders(); return all.find(o=>o.id===id); }
-function updateOrderStatus(id, newStatus){
-  const all = readOrders();
-  const idx = all.findIndex(o=>o.id===id);
-  if(idx===-1) return;
-  all[idx].status = newStatus;
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(all));
-  updateOrdersUI();
-  showToast(`Order ${id} → ${newStatus}`);
-}
-function cancelOrder(id){ if(!confirm('Cancel this order?')) return; updateOrderStatus(id,'Cancelled'); }
-function requestRefund(id){ if(!confirm('Request refund for this order?')) return; updateOrderStatus(id,'Refunded'); }
-function markAsShipped(id){ updateOrderStatus(id,'To Receive'); }
-function markAsReceived(id){ updateOrderStatus(id,'Completed'); }
-
-/* ========= Chat Assistant ========= */
-function toggleChat(){ const box = document.getElementById('chatBox'); box.classList.toggle('open'); box.setAttribute('aria-hidden', !box.classList.contains('open')); document.getElementById('chatInput').focus(); }
-function chatHandleKey(e){ if(e.key==='Enter'){ const q = e.target.value.trim(); if(!q) return; appendChat('You', q); const reply = generateChatReply(q); setTimeout(()=> appendChat('Assistant', reply), 600); e.target.value=''; } }
-function appendChat(who, text){ const body = document.getElementById('chatBody'); const node = document.createElement('div'); node.style.marginBottom='8px'; node.innerHTML = `<strong>${who}:</strong> ${escapeHtml(text)}`; body.appendChild(node); body.scrollTop = body.scrollHeight; }
-function generateChatReply(q){
-  const s = q.toLowerCase();
-  if(s.includes('how') && s.includes('order')) return 'To order: add items to cart, open Checkout, fill your details and Place Order. We will email you confirmation.';
-  if(s.includes('cancel')) return 'To cancel: open My Orders, find your order and press Cancel (if still cancellable). If shipped, contact support.';
-  if(s.includes('refund') || s.includes('return')) return 'Refunds: request via My Orders or email us at lacsimarrainier24@gmail.com. Damaged items are eligible for refund within 7 days after delivery.';
-  if(s.includes('track')||s.includes('tracking')) return 'Tracking: we will email tracking code when we ship. Use that code on the courier website.';
-  if(s.includes('payment')||s.includes('pay')) return 'Payment methods: Cash on Delivery, GCash, Credit/Debit card (input details), PayPal.';
-  // product-specific queries: check product names
-  for(const p of PRODUCTS){
-    if(s.includes(p.title.split('—')[0].toLowerCase()) || s.includes(p.title.toLowerCase().split('—')[0].trim())){
-      return `${p.title} — ${p.desc}\nPrice: ₱${formatNum(p.price)}\nKey features: ${p.features.slice(0,4).join(', ')}.`;
-    }
-  }
-  // default
-  return "I'm BuildSmart Assistant — I can help with ordering, cancelling, refunds, tracking, and product details. Try: 'How to order', 'HydroShield details', 'Track my order'.";
-}
-
-/* ========= Misc / Init ========= */
-function scrollToSection(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
-function showSuccess(orderId){
-  const s = document.getElementById('successPopup'); s.classList.add('open'); s.style.display='block';
-  // auto hide after 3.2s
-  setTimeout(()=>{ s.classList.remove('open'); s.style.display='none'; }, 3200);
-}
-
-// printing
-let lastPrintedOrderId=null;
-function printOrder(){ // print last order saved
-  const orders = readOrders(); if(orders.length===0) return alert('No orders to print'); const o = orders[0]; lastPrintedOrderId=o.id; printOrderHTML(o); }
-function printOrderById(id){ const o = findOrder(id); if(!o) return alert('Order not found'); printOrderHTML(o); }
-function printOrderHTML(o){
-  const w = window.open('', '_blank');
-  const html = `<html><head><title>Order ${o.id}</title><style>body{font-family:Inter,Arial;padding:18px}h1{color:#0d6efd}</style></head><body><h1>BuildSmart PH — Order ${o.id}</h1><p><strong>Date:</strong> ${new Date(o.date).toLocaleString()}</p><p><strong>Name:</strong> ${escapeHtml(o.buyer_name)}</p><p><strong>Address:</strong> ${escapeHtml(o.buyer_address)}</p><pre>${escapeHtml(o.summary)}</pre><p><strong>Total:</strong> ₱${formatNum(o.total)}</p></body></html>`;
-  w.document.write(html); w.document.close(); w.print();
-}
-
-/* Save draft (just keep cart) */
-function saveDraft(){ showToast('Draft saved (cart remains)'); }
-
-/* simple helpers for checkout UI */
-function togglePaymentFields(){
-  const method = document.getElementById('pmethod').value;
-  document.querySelectorAll('.pay-gcash,.pay-card,.pay-paypal').forEach(el=>el.style.display='none');
-  if(method==='gcash') document.querySelectorAll('.pay-gcash').forEach(el=>el.style.display='block');
-  if(method==='card') document.querySelectorAll('.pay-card').forEach(el=>el.style.display='block');
-  if(method==='paypal') document.querySelectorAll('.pay-paypal').forEach(el=>el.style.display='block');
-}
-
-/* generate checkout hidden fields periodically */
-setInterval(()=>{ try{ if(document.getElementById('checkoutOverlay').classList.contains('open')) fillHiddenOrderFields(); }catch(e){} },800);
-
-/* init page */
-window.addEventListener('load', ()=>{
-  renderProducts();
-  // restore cart
-  const cart = readCart();
-  if(cart.length) renderCart();
-  updateCartCount();
-  updateOrdersUI();
-});
-</script>
-  <script>
-  // Collapsible product details
-  document.querySelectorAll('.show-details').forEach(button => {
-    button.addEventListener('click', () => {
-      const details = button.nextElementSibling;
-      details.style.display = details.style.display === 'block' ? 'none' : 'block';
-      button.textContent = details.style.display === 'block' ? 'Hide Key Features & Specifications ▲' : 'View Key Features & Specifications ▼';
-    });
-  });
-
-  // Interactive cart
-  const cart = [];
-  const cartContainer = document.createElement('div');
-  cartContainer.id = 'cart-container';
-  cartContainer.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#fff; border:1px solid #ccc; border-radius:10px; padding:15px; max-width:300px; display:none; box-shadow:0 4px 6px rgba(0,0,0,0.1);';
-  cartContainer.innerHTML = `
-    <h4>Your Cart</h4>
-    <ul id="cart-items" style="padding-left:20px;"></ul>
-    <button id="clear-cart" style="margin-top:10px; padding:8px 12px; border:none; background:#007bff; color:#fff; border-radius:5px; cursor:pointer;">Clear Cart</button>
+      <div style="margin-top:0.5rem; font-size:0.8rem; color:#555;">Payment: ${order.payment}</div>
+    </div>
   `;
-  document.body.appendChild(cartContainer);
+}
 
-  const cartItemsList = document.getElementById('cart-items');
-  const clearCartBtn = document.getElementById('clear-cart');
-
-  function updateCartDisplay() {
-    cartItemsList.innerHTML = '';
-    cart.forEach(item => {
-      const li = document.createElement('li');
-      li.textContent = item;
-      cartItemsList.appendChild(li);
-    });
-    cartContainer.style.display = cart.length ? 'block' : 'none';
+// Cancel Order
+function cancelOrder(id){
+  const order = orders.find(o=>o.id===id);
+  if(order && order.status==='Pending'){
+    order.status='Cancelled';
+    alert("Order cancelled");
+    trackOrder();
   }
-
-  document.querySelectorAll('.add-cart').forEach(button => {
-    button.addEventListener('click', () => {
-      const productName = button.closest('.card').querySelector('h3').textContent;
-      cart.push(productName);
-      updateCartDisplay();
-    });
-  });
-
-  clearCartBtn.addEventListener('click', () => {
-    cart.length = 0;
-    updateCartDisplay();
-  });
-  <script>
-document.addEventListener("DOMContentLoaded", () => {
-  // Handle collapsible details
-  const detailButtons = document.querySelectorAll(".show-details");
-  detailButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const details = btn.nextElementSibling;
-      if (details.style.display === "none" || !details.style.display) {
-        details.style.display = "block";
-        btn.textContent = btn.textContent.replace("▼", "▲");
-      } else {
-        details.style.display = "none";
-        btn.textContent = btn.textContent.replace("▲", "▼");
-      }
-    });
-  });
-
-  // Handle Add to Cart
-  const cart = [];
-  const cartButtons = document.querySelectorAll(".add-cart");
-  cartButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const productCard = btn.closest(".card");
-      const productName = productCard.querySelector("h3")?.textContent || "Product";
-      cart.push(productName);
-      alert(`${productName} added to cart!\nTotal items: ${cart.length}`);
-    });
-  });
-});
+}
 </script>
 </body>
 </html>
