@@ -46,7 +46,7 @@
   .old{color:var(--muted);text-decoration:line-through;font-size:13px}
   .desc{color:var(--muted);font-size:13px;margin-top:8px}
 
-  /* Details (collapsible) */
+  /* .Show-Details (collapsible) */
   .details{border-top:1px solid rgba(11,17,36,0.04);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
   .toggle{background:none;border:none;color:var(--accent);font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
   .details-content{overflow:hidden;max-height:0;transition:max-height .36s ease,padding .2s ease}
@@ -54,15 +54,15 @@
   .features ul{margin:6px 0 0 18px;color:var(--muted)}
   .specs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
   .spec{background:var(--bg);padding:8px;border-radius:8px;font-size:13px;color:var(--muted)}
-
+   . add cart button
   /* purchase bar inside details */
   .purchase{display:flex;gap:10px;align-items:center;margin-top:8px}
   .qty{display:flex;align-items:center;gap:8px}
   .qty button{width:34px;height:34px;border-radius:8px;border:1px solid rgba(11,17,36,0.06);background:#fff;cursor:pointer;font-weight:700}
   .qty .value{min-width:28px;text-align:center;font-weight:800}
   .add{flex:1;padding:10px;border-radius:10px;background:var(--accent);color:#fff;border:none;font-weight:800;cursor:pointer}
-
-  /* Cart Drawer */
+.add-cart
+  /* add Cart Drawer */
   .cart-drawer{position:fixed;right:-440px;top:0;width:420px;height:100%;background:var(--card);box-shadow:-8px 0 30px rgba(2,6,23,0.16);transition:right .42s cubic-bezier(.2,.9,.26,1.05);z-index:1400;display:flex;flex-direction:column}
   .cart-drawer.open{right:0}
   .cart-head{display:flex;align-items:center;justify-content:space-between;padding:18px;border-bottom:1px solid rgba(11,17,36,0.04)}
@@ -845,6 +845,35 @@ window.addEventListener('load', ()=>{
     cart.length = 0;
     updateCartDisplay();
   });
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Handle collapsible details
+  const detailButtons = document.querySelectorAll(".show-details");
+  detailButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const details = btn.nextElementSibling;
+      if (details.style.display === "none" || !details.style.display) {
+        details.style.display = "block";
+        btn.textContent = btn.textContent.replace("▼", "▲");
+      } else {
+        details.style.display = "none";
+        btn.textContent = btn.textContent.replace("▲", "▼");
+      }
+    });
+  });
+
+  // Handle Add to Cart
+  const cart = [];
+  const cartButtons = document.querySelectorAll(".add-cart");
+  cartButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const productCard = btn.closest(".card");
+      const productName = productCard.querySelector("h3")?.textContent || "Product";
+      cart.push(productName);
+      alert(`${productName} added to cart!\nTotal items: ${cart.length}`);
+    });
+  });
+});
 </script>
 </body>
 </html>
